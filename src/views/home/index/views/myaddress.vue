@@ -1,0 +1,331 @@
+<template>
+  <!--收货地址-->
+  <div class="outer">
+    <div class="top">
+      <p class="title">收货地址</p>
+      <div>
+        <el-input style="width: 200px" type="text" v-model="linkMan" placeholder="收货人姓名" />
+        <el-input style="width: 200px" type="text" v-model="linkPhone" placeholder="收货人联系电话" />
+        <el-button style="background-color: #ffffff;color: #333333;margin-left: 5px;border:1px solid #dedede ;" @click="searchList">查询</el-button>
+      </div>
+      <button @click="addAddress">添加收货地址</button>
+      <button v-if="type==='order'" @click="backOrder">返回下单</button>
+    </div>
+    <ul>
+      <li v-for="msg in msgList" :key="msg.id">
+        <div class="container">
+          <div class="information">
+            <div>
+              <p class="people">联系人：{{msg.linkMan}}</p>
+              <p class="phone">联系电话：{{msg.linkPhone}}</p>
+            </div>
+            <p class="address1">收货地址：{{msg.areaName +'  '+ msg.address}}</p>
+          </div>
+          <div class="button1">
+            <button class="edit1" @click="editAddress(msg.id)">编辑</button>
+            <button class="delete1" @click="toDelet(msg.id)">删除</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="footer1">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageNum"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
+    </div>
+    <el-dialog
+      title="新增收货地址"
+      :visible.sync="editOrderVisible"
+      width="50%"
+      :close-on-click-modal="false"
+    >
+      <add-address @cancalShow="closeAdd" @saveAddress="submit" :form="form"></add-address>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import AddAddress from "../components/AddAddress";
+export default {
+  name: "address1",
+  data() {
+    return {
+      msgList: [],
+      pageNum: 1,
+      total: 0,
+      pageSize: 10,
+      type: "",
+      linkMan:"",
+      linkPhone:"",
+      editOrderVisible: false,
+      userInfo: {},
+      form: {},
+      addrList: [],
+      addr: "",
+      props: {
+        label: "name",
+        value: "code"
+      }
+    };
+  },
+  methods: {
+    searchList() {
+      this.msgList = [];
+      this.getAddressList();
+    },
+    closeAdd() {
+      this.editOrderVisible = false;
+    },
+    toDelet(id) {
+      this.api.addrDelet(id).then(res => {
+        if (res.code == 0) {
+          this.$message({
+            message: "删除成功",
+            type: "success"
+          });
+        }
+        this.msgList = [];
+        this.getAddressList();
+      });
+    },
+    editAddress(id) {
+      this.editOrderVisible = true;
+      this.getAddressInfo(id);
+    },
+    addAddress() {
+      // const type = this.type ? this.type : "";
+      // this.$router.push(`/service/addaddress?type=${type}`);
+      this.editOrderVisible = true;
+      this.form = {
+        areaCode: "", //所在区划编码
+        areaName: "", //所在区划名称
+        linkMan: "", //收货联系人
+        linkPhone: "", //收货联系人电话
+        isDefault: "1", //是否默认
+        address: "", //详细地址
+        userId: ""
+      };
+    },
+    backOrder() {
+      this.$router.push("/highcustom/order");
+    },
+    //点击处理当前页,定义的时候没有参数，调用的时候回自动加一个e
+    async handleCurrentChange(e) {
+      this.pageNum = e;
+      let userInfo = JSON.parse(this.until.loGet("userInfo"));
+      let param = {
+        linkMan:this.linkMan,
+        linkPhone:this.linkPhone,
+        userId: userInfo.userId,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      };
+      let res = await this.api.getAddress(param);
+      this.msgList = res.data.result;
+      this.total = res.data.total;
+    },
+    async handleSizeChange(val) {
+      this.pageSize = val;
+      this.pageNum = 1;
+      let userInfo = JSON.parse(this.until.loGet("userInfo"));
+      let param = {
+        linkMan:this.linkMan,
+        linkPhone:this.linkPhone,
+        userId: userInfo.userId,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      };
+      let res = await this.api.getAddress(param);
+      this.msgList = res.data.result;
+      this.total = res.data.total;
+      console.log(`每页 ${val} 条`);
+    },
+    //获取省市区数据
+
+    async getAddressInfo(id) {
+      this.form = await this.api.getSysAddressInfo(id);
+    },
+    //省市区选择
+    addrChange(e) {
+      this.form.areaCode = e.join("/");
+      this.form.areaName = this.$refs.myCascader
+        .getCheckedNodes()[0]
+        .pathLabels.join("/");
+      // console.log(this.$refs.myCascader.getCheckedNodes()[0].pathLabels)
+    },
+    submit(form) {
+      this.form = { ...form };
+      let msg = this.reg.checkPhone(this.form.linkPhone);
+      if (msg !== "ok") {
+        this.$message.error(msg);
+        return;
+      }
+
+      delete this.form.crtTm;
+      delete this.form.crtBy;
+      delete this.form.updTm;
+      delete this.form.updBy;
+      this.form.userId = this.userInfo.userId;
+      this.api.addrAdd(this.form).then(res => {
+        if (res.code == 0) {
+          this.msgList = [];
+          this.getAddressList();
+          this.$message({
+            message: "地址保存成功",
+            type: "success"
+          });
+          this.editOrderVisible = false;
+        }
+      });
+    },
+    async getAddressList() {
+      let param = {
+        linkMan:this.linkMan,
+        linkPhone:this.linkPhone,
+        userId: this.userInfo.userId,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      };
+      let res = await this.api.getAddress(param);
+      this.msgList.push(...res.data.result);
+      this.total = res.data.total;
+    }
+  },
+  mounted() {
+
+    this.type = this.$route.query.type;
+    this.userInfo = JSON.parse(this.until.loGet("userInfo"));
+    this.getAddressList();
+  },
+  components: {
+    AddAddress
+  }
+};
+</script>
+
+<style lang="less">
+.el-dialog__body {
+  padding: 0 20px;
+}
+</style>
+
+<style scoped lang="less">
+/*最外层布局*/
+.outer {
+  padding-top: 14px;
+  min-height: 700px;
+  width: 950px;
+  background: white;
+}
+.top {
+  padding-left: 35px;
+  width: 914px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  border-bottom: 1px solid #e1e1e1;
+}
+p.title {
+  margin-top: 20px;
+  color: #333333;
+  font-size: 18px;
+  float: left;
+}
+.top button {
+  float: right;
+  margin-right: 30px;
+ // margin-top: 5px;
+  width: 149px;
+  height: 37px;
+  text-align: center;
+  //line-height: 37px;
+  background: #ff9801;
+  color: white;
+}
+
+.container {
+  padding-top: 25px;
+  padding-left: 35px;
+  width: 914px;
+  height: 85px;
+  border-bottom: 1px solid #e1e1e1;
+  display: flex;
+  display: -webkit-flex;
+  flex-flow: row nowrap;
+}
+.container:hover {
+  background: whitesmoke;
+}
+.information {
+  flex: 1;
+  margin-right: 4%;
+}
+/*删除和编辑按钮的布局*/
+.button1 {
+  margin-top: 10px;
+  margin-right: 30px;
+  display: flex;
+  display: -webkit-flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  button {
+    cursor: pointer;
+    background: white;
+    border-radius: 3px;
+  }
+}
+/*编辑按钮*/
+.edit1 {
+  margin-right: 41px;
+  width: 96px;
+  height: 36px;
+  border: 1px solid #f6a33e;
+  color: #f6a33e;
+  font-size: 14px;
+  line-height: 36px;
+}
+/*删除按钮和编辑按钮共同属性*/
+.delete1 {
+  width: 96px;
+  height: 36px;
+  border: 1px solid #f6a33e;
+  color: #f6a33e;
+  font-size: 14px;
+  line-height: 36px;
+}
+/*在两个按钮的容器上设置hover有效果*/
+.button1 :hover {
+  background: #f6a33e;
+  color: white;
+}
+
+p.people {
+  display: inline-block;
+}
+p.phone {
+  display: inline-block;
+  margin-left: 80px;
+}
+.people,
+.address1,
+.phone {
+  color: #666666;
+  font-size: 14px;
+  padding-bottom: 4px;
+}
+.address1 {
+  margin-top: 12px;
+}
+.footer1 {
+  margin-top: 30px;
+  padding-left: 35px;
+  width: 914px;
+  height: 75px;
+}
+</style>
