@@ -1,9 +1,9 @@
 <template>
-  <!--我的订单-->
+  <!--销售网点-->
   <div class="outer2" v-loading="loading"
        element-loading-text="请不要关闭或者刷新页面">
     <div class="top2">
-      <p>我的订单</p>
+      <p>销售网点</p>
       <div class="select">
         <div class="block2">
           <el-date-picker

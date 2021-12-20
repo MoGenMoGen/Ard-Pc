@@ -19,7 +19,9 @@ import Feedback from "../views/feedback";
 import Message from "../views/message";
 import Distributor from "../views/distributor";
 import Myaddress from "../views/myaddress";
+import Saleoutlet from "../views/saleoutlet";
 import Paydetail from "../views/paydetail";
+import Integral from "../views/myintegral";
 import AccountManager from "../views/account";
 import MessageDetail from "../views/messageDetail";
 import Mynetwork from "../views/mynetwork"
@@ -163,10 +165,24 @@ const router = new VueRouter({
           }
         },
         {
+          path: "saleoutlet",
+          component: Saleoutlet,
+          meta: {
+            title: "营业网点"
+          }
+        },
+        {
           path: "paydetail",
           component: Paydetail,
           meta: {
             title: "付款详情"
+          }
+        },
+        {
+          path: "integral",
+          component: Integral,
+          meta: {
+            title: "我的积分"
           }
         },
         {

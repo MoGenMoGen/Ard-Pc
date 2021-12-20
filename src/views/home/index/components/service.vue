@@ -29,6 +29,7 @@ export default {
 <style lang='less'>
 .service {
   background-color: #f5f5f5;
+  min-height: calc(~'100vh - 280px');
   .top-wrap {
     width: 100%;
     margin: 0 auto;

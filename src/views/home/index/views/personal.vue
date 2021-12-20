@@ -1,14 +1,14 @@
 <template>
   <!--个人中心-->
   <div id="personal">
-    <div id="top">
+    <div id="top1">
       <span id="name">{{mydata.realName}}</span>
-      <span id="phone">{{mydata.username}}</span>
+      <span id="phone">{{mydata.linkPhone}}</span>
       <span id="date">协议到期日：{{mydata.validTime}}</span>
     </div>
     <p id="company">{{mydata.agentInfoName}}</p>
     <div id="manage">
-      <a @click="myaccount">账户管理</a>
+      <a @click="myaccount">账户管理 ></a>
       <div v-show="showStatic">
         <p @click="toPayDetail">累计订单总额: ￥{{staticData.totalOrderPrice}}</p>
         <p>本年度订单总额: ￥{{staticData.thisYearOrderPrice}}</p>
@@ -37,6 +37,15 @@
           <div class="neikuang-div">
             <div class="neikuang-div-one">我的订单</div>
             <div class="neikuang-div-two">查看订单详情></div>
+          </div>
+        </div>
+      </div>
+       <div id="integral" class="table1">
+        <div class="neikuang" @click="myintegral">
+          <img class="neikuang-img" src="../images/jifen.png" />
+          <div class="neikuang-div">
+            <div class="neikuang-div-one">我的积分</div>
+            <div class="neikuang-div-two">查看积分明细></div>
           </div>
         </div>
       </div>
@@ -71,6 +80,9 @@ export default {
     },
     myorder: function() {
       this.$router.push("./order");
+    },
+    myintegral:function() {
+      // this.$router.push(".");
     },
     myaddress: function() {
       this.$router.push("./myaddress");
@@ -152,19 +164,21 @@ img {
 .table1 {
   display: flex;
   flex-wrap: wrap;
-  width: 50%;
+  width: 33.3%;
   height: 50%;
 }
 #border1 {
   height: 1px;
-  width: 856px;
+  width: 100%;
   background: #e1e1e1;
-  margin-left: 57px;
+  // margin-left: 57px;
   margin-top: 20px;
 }
 
 #personal {
-  padding-top: 14px;
+  // padding-top: 14px;
+  padding:44px 67px 40px 40px;
+  box-sizing: border-box;
   height: 606px;
   width: 950px;
   background: white;
@@ -181,7 +195,7 @@ img {
   color: #999999;
 }
 #date {
-  margin-left: 550px;
+  margin-left: 338px;
   color: #999999;
   font-size: 14px;
 }
@@ -192,7 +206,7 @@ img {
   font-size: 18px;
 }
 #manage {
-  margin: 20px 0 0 60px;
+  margin: 27px 0 0 60px;
   font-size: 14px;
   display: flex;
   flex-flow: column wrap;

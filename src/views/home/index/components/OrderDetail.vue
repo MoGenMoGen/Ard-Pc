@@ -1,18 +1,20 @@
 <template>
   <div class="detail">
     <div class="state1">
-      <p v-if="info.status==0">订单状态：待客服评审</p>
-      <p v-if="info.status==5">订单状态：已同步MES</p>
-      <p v-if="info.status==-1">订单状态：已取消！</p>
-      <p v-if="info.status==-2">订单状态：客服评审未通过！</p>
-      <p v-if="info.status==10">订单状态：评审通过下料中！</p>
-      <p v-if="info.status==20 || info.status==30 || info.status==40">订单状态：待发货！</p>
-      <p v-if="info.status==50">订单状态：待收货！</p>
-      <p v-if="info.status==60">订单状态：技术评审！</p>
-      <p v-if="info.status==70">订单状态：客服评审！</p>
-      <p v-if="info.status==80">订单状态：生管评审！</p>
-      <p v-if="info.status==90">订单状态：待同步ERP！</p>
-      <p v-if="info.status==99">订单状态：已完成！</p>
+      <p v-if="info.status == 0">订单状态：待客服评审</p>
+      <p v-if="info.status == 5">订单状态：已同步MES</p>
+      <p v-if="info.status == -1">订单状态：已取消！</p>
+      <p v-if="info.status == -2">订单状态：客服评审未通过！</p>
+      <p v-if="info.status == 10">订单状态：评审通过下料中！</p>
+      <p v-if="info.status == 20 || info.status == 30 || info.status == 40">
+        订单状态：待发货！
+      </p>
+      <p v-if="info.status == 50">订单状态：待收货！</p>
+      <p v-if="info.status == 60">订单状态：技术评审！</p>
+      <p v-if="info.status == 70">订单状态：客服评审！</p>
+      <p v-if="info.status == 80">订单状态：生管评审！</p>
+      <p v-if="info.status == 90">订单状态：待同步ERP！</p>
+      <p v-if="info.status == 99">订单状态：已完成！</p>
       <!-- <p @click="toLogistics()" v-if="info.status==50 || info.status==99">查看物流 ></p> -->
     </div>
     <div class="container1">
@@ -20,29 +22,31 @@
       <div class="detail1">
         <p>
           <span>订单编号：</span>
-          {{info.orderCode}}
+          {{ info.orderCode }}
         </p>
-        <p v-for="item in orderTypeList" v-if="info.orderType ==item.cd"><span>订单类型：</span>{{item.nm}}</p>
+        <p v-for="item in orderTypeList" v-if="info.orderType == item.cd">
+          <span>订单类型：</span>{{ item.nm }}
+        </p>
         <p>
           <span>订单报备：</span>
-          {{info.reportName}}项目报备
+          {{ info.reportName }}项目报备
         </p>
 
         <p>
           <span>期望交期：</span>
-          {{info.delieryTime}}
+          {{ info.delieryTime }}
         </p>
         <p>
           <span>logo数量：</span>
-          {{info.logoNum}}
+          {{ info.logoNum }}
         </p>
         <p>
           <span>经销商名称：</span>
-          {{info.agentName}}
+          {{ info.agentName }}
         </p>
         <p>
           <span>营业网点信息：</span>
-          {{info.networkName}}
+          {{ info.networkName }}
         </p>
       </div>
 
@@ -55,19 +59,21 @@
         <span class="_span5">手机号码</span>
       </div>
       <div class="address-body">
-        <span class="_span1">{{info.receiver}}</span>
-        <span class="_span2">{{info.orderAreaName}}</span>
-        <span class="_span3">{{info.receiveAddress}}</span>
+        <span class="_span1">{{ info.receiver }}</span>
+        <span class="_span2">{{ info.orderAreaName }}</span>
+        <span class="_span3">{{ info.receiveAddress }}</span>
         <!--<span class="_span4">315200</span>-->
-        <span class="_span5">{{info.receiverPhone}}</span>
+        <span class="_span5">{{ info.receiverPhone }}</span>
       </div>
       <div class="express-pay">
-        <p v-if="info.payLogisticsFeeType==1">物流费用：月付</p>
-        <p v-if="info.payLogisticsFeeType==2">物流费用：到付</p>
-        <p v-if="info.payLogisticsFeeType==3">物流费用：平台垫付</p>
+        <p v-if="info.payLogisticsFeeType == 1">物流费用：月付</p>
+        <p v-if="info.payLogisticsFeeType == 2">物流费用：到付</p>
+        <p v-if="info.payLogisticsFeeType == 3">物流费用：平台垫付</p>
       </div>
       <div class="express-pay">
-        <p v-for="item in expressTypeList" v-if="item.cd== info.expressType">快递类型：{{item.nm}}</p>
+        <p v-for="item in expressTypeList" v-if="item.cd == info.expressType">
+          快递类型：{{ item.nm }}
+        </p>
       </div>
       <div class="title2">订单信息</div>
       <div class="table-header">
@@ -87,54 +93,60 @@
       </div>
       <div class="list">
         <ul>
-          <li v-for="(item,index) in info.orderItemList" :key="item.id" class="item">
-            <div class="div1">{{index+1}}</div>
-            <div class="div2">{{item.productName}}</div>
+          <li
+            v-for="(item, index) in info.orderItemList"
+            :key="item.id"
+            class="item"
+          >
+            <div class="div1">{{ index + 1 }}</div>
+            <div class="div2">{{ item.productName }}</div>
             <div class="div3">
-              <p
-                v-for="(v,i) in item.productAttributeList"
-                :key="i"
-              >{{v.attributeKeyName}}：{{v.attributeValueName}}</p>
+              <p v-for="(v, i) in item.productAttributeList" :key="i">
+                {{ v.attributeKeyName }}：{{ v.attributeValueName }}
+              </p>
             </div>
 
-            <div class="div5" v-if="item.productType==1">定制</div>
-            <div class="div5" v-else-if="item.productType==2">艺术定制</div>
-            <div class="div5" v-else-if="item.productType==3">专属定制</div>
-            <div class="div5" v-else-if="item.productType==0">标准</div>
+            <div class="div5" v-if="item.productType == 1">定制</div>
+            <div class="div5" v-else-if="item.productType == 2">艺术定制</div>
+            <div class="div5" v-else-if="item.productType == 3">专属定制</div>
+            <div class="div5" v-else-if="item.productType == 0">标准</div>
             <div class="div5" v-else></div>
-            <div class="div6" v-if="!notShowTotal">{{item.productPrice}}</div>
+            <div class="div6" v-if="!notShowTotal">{{ item.productPrice }}</div>
             <div class="div6" v-else></div>
-            <div class="div10" v-if="!notShowTotal">{{item.cutPrice}}</div>
+            <div class="div10" v-if="!notShowTotal">{{ item.cutPrice }}</div>
             <div class="div10" v-else></div>
-            <div class="div7" v-if="!notShowTotal">{{item.extPrice}}</div>
+            <div class="div7" v-if="!notShowTotal">{{ item.extPrice }}</div>
             <div class="div7" v-else></div>
-            <div class="div7">{{item.orderNum}}</div>
-            <div class="div8" v-if="!notShowTotal">{{item.productAmount}}</div>
+            <div class="div7">{{ item.orderNum }}</div>
+            <div class="div8" v-if="!notShowTotal">
+              {{ item.productAmount }}
+            </div>
             <div class="div8" v-else></div>
             <!--列表项中的操作-->
             <div class="div9">
-              <p>{{item.installSite}}</p>
+              <p>{{ item.installSite }}</p>
             </div>
             <div class="div9">
-              <p>{{item.remark}}</p>
+              <p>{{ item.remark }}</p>
             </div>
             <div class="div9">
-              <p>{{item.remarkProduct}}</p>
+              <p>{{ item.remarkProduct }}</p>
             </div>
             <div class="div9">
               <a
                 href="javascript:;"
-                v-if="item.shapeImgUrl!=null && item.shapeImgUrl!='' "
+                v-if="item.shapeImgUrl != null && item.shapeImgUrl != ''"
                 target="_blank"
                 v-for="(item2, index) in (item.shapeImgUrl || '').split(',')"
                 :key="index"
                 @click="openFile(item2)"
-              >附件{{index+1}}</a>
+                >附件{{ index + 1 }}</a
+              >
             </div>
           </li>
         </ul>
       </div>
-      <div class="bottom1" v-if="ordertype==1">
+      <div class="bottom1" v-if="ordertype == 1">
         <span class="span1">合计：</span>
         <span class="span2"></span>
         <span class="span3"></span>
@@ -143,32 +155,46 @@
         <span class="span10"></span>
         <span class="span7"></span>
 
-        <span class="span7">{{totalNum}}</span>
-        <span v-if="!notShowTotal" class="span8">{{info.totalAmount}}</span>
+        <span class="span7">{{ totalNum }}</span>
+        <span v-if="!notShowTotal" class="span8">{{ info.totalAmount }}</span>
         <span class="span8" v-else></span>
         <span class="span9"></span>
         <span class="span9"></span>
         <span class="span9"></span>
         <span class="span9"></span>
       </div>
+      <div class="money_detail">
+          <div class="money_item">
+            <div class="left">商品合计：</div>
+            <div class="right">￥4000000</div>
+          </div>
+          <div class="money_item">
+            <div class="left">积分抵扣：</div>
+            <div class="right">- 40</div>
+          </div>
+          <div class="money_item">
+            <div class="left">应付金额：</div>
+            <div class="right" style="color: #ff2a00">￥360</div>
+          </div>
+      </div>
       <div class="title2">
         备注
-        <span class="beizhu">{{info.remark}}</span>
+        <span class="beizhu">{{ info.remark }}</span>
       </div>
 
       <div class="title3">审核信息</div>
       <div class="approve-list" v-for="item in checkList" :key="item.id">
         <div>
           <p>审核人：</p>
-          <p>{{item.checker}}</p>
+          <p>{{ item.checker }}</p>
         </div>
         <div>
           <p>审核时间：</p>
-          <p>{{item.crtTm}}</p>
+          <p>{{ item.crtTm }}</p>
         </div>
         <div>
           <p>审核备注：</p>
-          <p>{{item.remark}}</p>
+          <p>{{ item.remark }}</p>
         </div>
       </div>
     </div>
@@ -181,17 +207,17 @@ export default {
   props: {
     info: {
       type: Object,
-      default: {}
-    }
+      default: {},
+    },
   },
   data() {
     return {
-      orderTypeList:[],
-      expressTypeList:[],
+      orderTypeList: [],
+      expressTypeList: [],
       id: "",
       totalAmount: 0,
       ordertype: "1",
-      checkList: []
+      checkList: [],
     };
   },
   async mounted() {
@@ -200,8 +226,8 @@ export default {
   watch: {
     "info.id"(val) {
       this.getOrderCheckList(val);
-      this.getExpressTypeList()
-    }
+      this.getExpressTypeList();
+    },
   },
   computed: {
     // 计算是否显示总金额
@@ -221,7 +247,7 @@ export default {
           return p + n.orderNum;
         }, 0);
       }
-    }
+    },
   },
   methods: {
     async getInfo() {
@@ -230,7 +256,7 @@ export default {
           this.info.agentName = `${this.info.agentName}(临时客户-${this.info.shortTimeName})`;
         }
         if (this.info.orderItemList) {
-          this.info.orderItemList.map(item => {
+          this.info.orderItemList.map((item) => {
             item.productPrice = item.productPrice ? item.productPrice : 0;
 
             item.productAmount = item.productPrice
@@ -246,28 +272,30 @@ export default {
       }
     },
     async getExpressTypeList() {
-      this.expressTypeList = await this.api.getBaseDictionaryList("express_type");
+      this.expressTypeList = await this.api.getBaseDictionaryList(
+        "express_type"
+      );
     },
     async getOrderTypeList() {
       this.orderTypeList = await this.api.getBaseDictionaryList("orderType");
     },
     async getOrderCheckList(id) {
       const param = {
-        orderId: id
+        orderId: id,
       };
 
       const res = await this.api.getSysOrderCheckList(param);
       this.checkList = (res && res[0].crmOrderCheckInfoVoList) || [];
       if (this.checkList.length > 0) {
-        this.checkList.forEach(item => {
+        this.checkList.forEach((item) => {
           item.crtTm = item.crtTm.substring(0, 10);
         });
       }
     },
     openFile(url) {
-      window.open(url)
-    }
-  }
+      window.open(url);
+    },
+  },
 };
 </script>
 
@@ -451,6 +479,30 @@ export default {
   color: #666666;
   font-size: 14px;
 }
+// 金额明细
+.money_detail {
+  width: 100%;
+  padding-right: 473px;
+  border-bottom: 2px solid #E1E1E1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  .money_item {
+    margin-top: 29px;
+    display: flex;
+    .left {
+    }
+    .right {
+      width: 100px;
+      text-align: right;
+    }
+  }
+  .money_item:last-child {
+    margin-bottom: 29px;
+  }
+}
+
 /*列表项*/
 .item {
   padding-top: 18px;
