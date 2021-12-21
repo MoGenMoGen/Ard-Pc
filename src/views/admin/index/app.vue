@@ -20,7 +20,7 @@
     </div>
     <h3>埃瑞德销售驾驶舱</h3>
     <div class="row">
-       <div class="left">
+<!--       <div class="left">
          <p class="title">本年度报备统计</p>
          <div>
            <p>报备笔数：<span class="red">{{info.reportCount}}</span>笔</p>
@@ -33,6 +33,17 @@
            <p><span>已成交总数：</span>{{info.completedReportCount}}</p>
            <p><span>总报备数量：</span>{{info.allReporCount}}</p>
            <p><span>成交率：</span>{{info.turnoverRateStr}}</p>
+         </div>
+       </div> -->
+       <div class="left">
+         <p class="title">定制类型金额统计</p>
+         <div>
+           <p>定制：<span class="white">{{info.reportCount}}</span>万</p>
+           <p>艺术定制：<span class="white">{{info.reportMoney}}</span>万</p>
+           <p>专属定制：<span class="white">{{info.reportMoney}}</span>万</p>
+         </div>
+         <div class="chart">
+        <money ref="money"></money>
          </div>
        </div>
       <div class="center" ref="center">
@@ -101,6 +112,7 @@ import product from './components/product'
 import mapData from './components/mapData'
 import province from './components/province'
 import receipt from './components/receipt'
+import money from './components/money'
 export default {
   data() {
     return {
@@ -155,6 +167,7 @@ export default {
     this.$nextTick(()=>{
       console.log(this.$refs.echarts.offsetHeight)
       let height = this.$refs.echarts.offsetHeight - 80
+      this.$refs.money.setHeight(height)
       this.$refs.receipt.setHeight(height)
       this.$refs.product.setHeight(height)
       this.$refs.province.setHeight(height)
@@ -162,9 +175,22 @@ export default {
   },
   methods: {
     getData(year,month){
+
       this.api.adminData({year:year,month:month}).then(res=>{
         if(res.code === 0){
           this.info = res.data
+          let list=[
+            {name:'定制',
+            id:1,
+            value:1},
+            {name:'艺术定制',
+            id:2,
+            value:2},
+            {name:'专属定制',
+            id:3,
+            value:3},
+          ]
+          this.$refs.money.getData(list)
           this.$refs.receipt.getData(this.info.bigRegionCountList)
           this.$refs.product.getData(this.info.catTotalAmountList)
           this.$refs.province.getData(this.info.provinceTotalAmountList)
@@ -190,7 +216,8 @@ export default {
     mapData,
     product,
     province,
-    receipt
+    receipt,
+    money
   }
 };
 </script>
@@ -245,6 +272,9 @@ body {
     .red{
       color: @red;
     }
+    .white{
+      color:white;
+    }
     .blue{
       color: @blue;
     }
@@ -264,7 +294,7 @@ body {
       }
       .left{
         margin-left: 20px;
-        width: 240px;
+        width: 300px;
         border-radius: 6px;
         background: rgba(63,116,185,0.1);
         border: 1px solid #51555B;
@@ -319,6 +349,10 @@ body {
           font-size: 14px;
         }
       }
+    }
+    .chart{
+      padding: 0;
+      border: 0;
     }
   }
   .center{
