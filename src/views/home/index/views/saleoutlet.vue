@@ -184,6 +184,7 @@ export default {
     },
     handleScore4() {
       this.$router.push("./outletScoreDetail?type=4");
+      // console.log(111);
     },
   },
   components: {},
