@@ -1,19 +1,14 @@
 <template>
-  <!--我的积分-->
+  <!--网点积分详情-->
   <div
     class="outer2"
     v-loading="loading"
     element-loading-text="请不要关闭或者刷新页面"
   >
     <div class="top2">
-      <p :style="{ borderBottom: showCensus ? '' : '1px solid #e1e1e1' }">
-        我的积分<span
-          v-show="!showCensus"
-          style="margin-left: 5px; font-size: 14px; color: #606060"
-          >({{ desc }})</span
-        >
+      <p class="name" style="border-bottom: 1px solid #e1e1e1">
+        {{ info.nm }}
         <span
-          v-show="!showCensus"
           style="
             float: right;
             margin-right: 30px;
@@ -26,22 +21,13 @@
           >< 返回</span
         >
       </p>
-      <div class="score_census" v-show="showCensus">
-        <div class="item">
-          <div class="line1">10000</div>
-          <div class="line2" @click="handleScore1">总积分</div>
-        </div>
-        <div class="item">
-          <div class="line1">2000</div>
-          <div class="line2" @click="handleScore2">已使用积分</div>
-        </div>
-        <div class="item">
-          <div class="line1">1000</div>
-          <div class="line2" @click="handleScore3">即将到期积分</div>
-        </div>
+      <div class="info">
+        <p>联系人：{{ info.linkman }}</p>
+        <p>联系电话：{{ info.tel }}</p>
+        <p>收货地址：{{ info.address }}</p>
       </div>
       <div class="select">
-        <div class="available_score">{{ integralName }}:800</div>
+        <div class="available_score">{{ integralName }}：800</div>
         <div class="block">
           <div class="block2">
             <el-date-picker
@@ -71,7 +57,7 @@
           background: '#eee',
           color: '#999',
           'text-align': 'center',
-          padding: '0',
+          padding:'0'
         }"
         :cell-style="rowStyle"
         style="width: 100%; text-align: center"
@@ -154,18 +140,23 @@ export default {
           a7: "2022-12-06",
         },
       ],
-      showCensus: true, //显示积分明细
-      desc: "",
-      integralName: "可用积分",
+      integralName: "",
       pageNum: 1,
       pageSize: 10,
       total: 0,
-      orderStartTime: "", //下单开始时间
-      orderEndTime: "", //下单结束时间
       userInfo: {},
-      loading: true,
+      loading: false,
       param: {},
-      info: {},
+      info: {
+        nm: "宁波聚联科技有限公司（市代）",
+        linkman: "张三",
+        tel: "12345678910",
+        address: "浙江省宁波市镇海区",
+        score: 8000,
+        st: "",
+        et: "",
+      },
+      type: 0, //1:总积分，2:可用积分，3:已使用积分，4:即将到期积分
       pickerOptions: {
         shortcuts: [
           {
@@ -197,25 +188,26 @@ export default {
           },
         ],
       },
-      value1: "",
-      value2: "",
     };
   },
   async mounted() {
-    //改成经销商Id
-    let userInfo = this.until.loGet("userInfo");
-    if (userInfo) {
-      this.userInfo = JSON.parse(userInfo);
-      if (this.userInfo.userType === 2) {
-        this.agentId = this.userInfo.agentInfoId;
-      } else {
-        this.buyId = this.userInfo.userId;
-        this.extUserIds = this.userInfo.extUserIds
-          ? this.userInfo.extUserIds
-          : "";
-      }
+    this.type = Number(this.$route.query.type);
+    switch (this.type) {
+      case 1:
+        this.integralName = "总积分";
+        break;
+      case 2:
+        this.integralName = "可用积分";
+        break;
+      case 3:
+        this.integralName = "已使用积分";
+        break;
+
+      case 4:
+        this.integralName = "即将到期积分";
+        break;
     }
-    await this.getList();
+    // await this.getList();
   },
   watch: {},
   methods: {
@@ -232,23 +224,7 @@ export default {
       }
     },
     back() {
-      this.showCensus = true;
-      this.integralName = "可用积分";
-    },
-    handleScore1() {
-      this.showCensus = false;
-      this.desc = "总积分";
-      this.integralName = this.desc;
-    },
-    handleScore2() {
-      this.showCensus = false;
-      this.desc = "已使用积分";
-      this.integralName = this.desc;
-    },
-    handleScore3() {
-      this.showCensus = false;
-      this.desc = "即将到期积分";
-      this.integralName = this.desc;
+      this.$router.back();
     },
     handleCurrentChange(e) {
       this.loading = true;
@@ -266,6 +242,7 @@ export default {
       this.pageNum = 1;
       this.getList();
     },
+    toDetail() {},
     async getList() {
       this.param = {
         pageSize: this.pageSize, //每页显示的数据条数
@@ -300,13 +277,18 @@ export default {
   components: {},
 };
 </script>
-<style scoped>
+<style scoped lang="less">
 .btn {
   background: #f6a33e;
   color: #ffffff;
   text-align: center;
   margin: 8px 0;
   cursor: pointer;
+}
+.el-table {
+  /deep/ th {
+    // padding: 0;
+  }
 }
 </style>
 <style lang="less">
@@ -331,15 +313,37 @@ export default {
   // padding-left: 15px;
   font-size: 18px;
   color: #333333;
-  line-height: 70px;
+  //   line-height: 70px;
   border-bottom: 1px solid #e1e1e1;
+  .info {
+    padding: 26px 165px 26px 37px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e1e1e1;
+
+    p {
+      font-size: 14px;
+      color: #666666;
+    }
+    p:nth-child(1) {
+      display: inline-block;
+    }
+    p:nth-child(2) {
+      display: inline-block;
+      float: right;
+    }
+    p:nth-child(3) {
+      margin-top: 19px;
+    }
+  }
 }
 /*我的订单段落*/
-.top2 p {
+.top2 .name {
   display: block;
   width: 100%;
   padding-left: 15px;
   box-sizing: border-box;
+  line-height: 70px;
+  height: 70px;
 }
 // 积分统计
 .score_census {
@@ -384,6 +388,7 @@ export default {
   display: -webkit-flex;
   justify-content: space-between;
   .available_score {
+    font-size: 16px;
     color: #ff3000;
   }
   .block {

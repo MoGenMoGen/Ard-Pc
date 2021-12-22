@@ -1,19 +1,14 @@
 <template>
-  <!--我的积分-->
+  <!--网点积分汇总-->
   <div
     class="outer2"
     v-loading="loading"
     element-loading-text="请不要关闭或者刷新页面"
   >
     <div class="top2">
-      <p :style="{ borderBottom: showCensus ? '' : '1px solid #e1e1e1' }">
-        我的积分<span
-          v-show="!showCensus"
-          style="margin-left: 5px; font-size: 14px; color: #606060"
-          >({{ desc }})</span
-        >
+      <p style="border-bottom: 1px solid #e1e1e1">
+        网点积分汇总
         <span
-          v-show="!showCensus"
           style="
             float: right;
             margin-right: 30px;
@@ -26,36 +21,25 @@
           >< 返回</span
         >
       </p>
-      <div class="score_census" v-show="showCensus">
-        <div class="item">
-          <div class="line1">10000</div>
-          <div class="line2" @click="handleScore1">总积分</div>
-        </div>
-        <div class="item">
-          <div class="line1">2000</div>
-          <div class="line2" @click="handleScore2">已使用积分</div>
-        </div>
-        <div class="item">
-          <div class="line1">1000</div>
-          <div class="line2" @click="handleScore3">即将到期积分</div>
-        </div>
-      </div>
       <div class="select">
-        <div class="available_score">{{ integralName }}:800</div>
+        <div class="available_score">{{ integralName }}：800</div>
         <div class="block">
           <div class="block2">
-            <el-date-picker
-              value-format="yyyy-MM-dd"
-              v-model="dateTime"
-              type="daterange"
-              align="right"
-              unlink-panels
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              @change="changeDate"
-              :picker-options="pickerOptions"
-            ></el-date-picker>
+            <el-select
+              v-model="value1"
+              filterable
+              clearable
+              placeholder="请输入网点名称"
+              style="width: 320px"
+            >
+              <el-option
+                v-for="(item, index) in options"
+                :key="index"
+                :label="item.val"
+                :value="item.val"
+              >
+              </el-option>
+            </el-select>
           </div>
           <div class="block6">
             <input type="button" @click="toSearch" value="查询" />
@@ -71,11 +55,11 @@
           background: '#eee',
           color: '#999',
           'text-align': 'center',
-          padding: '0',
+          padding:'0'
+
         }"
         :cell-style="rowStyle"
         style="width: 100%; text-align: center"
-        @row-click="toDetail"
         v-loading="loading"
       >
         <el-table-column
@@ -86,31 +70,32 @@
         ></el-table-column>
         <el-table-column
           prop="a1"
-          label="积分来源"
-          width="170"
+          label="网点名称"
+          width="280"
         ></el-table-column>
         <el-table-column
           prop="a2"
-          label="订单编号"
-          width="140"
+          label="可用积分"
+          width="200"
         ></el-table-column>
-        <el-table-column prop="a3" label="日期" width="130"> </el-table-column>
-        <el-table-column
-          width="110"
-          prop="a4"
-          label="扣减积分"
-        ></el-table-column>
-        <el-table-column
-          width="110"
-          prop="a5"
-          label="奖励积分"
-        ></el-table-column>
-        <el-table-column
-          width="110"
-          prop="a6"
-          label="积分类型"
-        ></el-table-column>
-        <el-table-column width="130" label="到期时间" prop="a7">
+        <el-table-column prop="a3" label="积分类型" width="200">
+        </el-table-column>
+        <el-table-column width="220" label="操作">
+          <template slot-scope="score">
+            <div
+              style="
+                font-size: 14px;
+                text-decoration: underline;
+                color: #ff9801;
+                hover {
+                  cursor: pointer;
+                }
+              "
+              @click="toDetail(score.row.id)"
+            >
+              查看详情
+            </div>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -132,123 +117,70 @@ export default {
   name: "integral",
   data() {
     return {
-      dateTime: "",
       list: [],
       list1: [
         {
-          a1: "业绩奖励",
-          a2: "202112058-皖",
-          a3: "2021-11-12",
-          a4: "-50",
-          a5: "2000",
-          a6: "通用积分",
-          a7: "2022-12-06",
+          a1: "宁波聚联科技有限公司（市代）1",
+          a2: "2000",
+          a3: "通用积分",
         },
         {
-          a1: "业绩奖励",
-          a2: "202112058-皖",
-          a3: "2021-11-12",
-          a4: "-50",
-          a5: "2000",
-          a6: "通用积分",
-          a7: "2022-12-06",
+          a1: "宁波聚联科技有限公司（市代）2",
+          a2: "2000",
+          a3: "通用积分",
+        },
+        {
+          a1: "宁波聚联科技有限公司（市代）3",
+          a2: "2000",
+          a3: "通用积分",
         },
       ],
-      showCensus: true, //显示积分明细
-      desc: "",
-      integralName: "可用积分",
+      integralName: "",
       pageNum: 1,
       pageSize: 10,
       total: 0,
-      orderStartTime: "", //下单开始时间
-      orderEndTime: "", //下单结束时间
       userInfo: {},
-      loading: true,
+      loading: false,
       param: {},
       info: {},
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: "最近一周",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit("pick", [start, end]);
-            },
-          },
-          {
-            text: "最近一个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit("pick", [start, end]);
-            },
-          },
-          {
-            text: "最近三个月",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit("pick", [start, end]);
-            },
-          },
-        ],
-      },
       value1: "",
-      value2: "",
+      options: [
+        { val: "宁波聚联科技有限公司（市代）1" },
+        { val: "宁波聚联科技有限公司（市代）2" },
+        { val: "宁波聚联科技有限公司（市代）3" },
+        { val: "宁波聚联科技有限公司（市代）4" },
+      ],
+      type:0,//1:总积分，2:可用积分，3:已使用积分，4:即将到期积分
+
     };
   },
   async mounted() {
-    //改成经销商Id
-    let userInfo = this.until.loGet("userInfo");
-    if (userInfo) {
-      this.userInfo = JSON.parse(userInfo);
-      if (this.userInfo.userType === 2) {
-        this.agentId = this.userInfo.agentInfoId;
-      } else {
-        this.buyId = this.userInfo.userId;
-        this.extUserIds = this.userInfo.extUserIds
-          ? this.userInfo.extUserIds
-          : "";
+      this.type=Number(this.$route.query.type);
+      switch(this.type){
+          case 1:
+              this.integralName="全部销售网点总积分";
+              break;
+          case 2:
+              this.integralName="全部销售网点可用积分";
+              break;
+          case 3:
+              this.integralName="全部销售网点已使用积分";
+              break;
+
+          case 4:
+              this.integralName="全部销售网点即将到期积分";
+              break;
+
       }
-    }
-    await this.getList();
+    // await this.getList();
   },
   watch: {},
   methods: {
     rowStyle() {
       return "text-align:center";
     },
-    changeDate(e) {
-      if (e) {
-        this.orderStartTime = e[0];
-        this.orderEndTime = e[1];
-      } else {
-        this.orderStartTime = "";
-        this.orderEndTime = "";
-      }
-    },
     back() {
-      this.showCensus = true;
-      this.integralName = "可用积分";
-    },
-    handleScore1() {
-      this.showCensus = false;
-      this.desc = "总积分";
-      this.integralName = this.desc;
-    },
-    handleScore2() {
-      this.showCensus = false;
-      this.desc = "已使用积分";
-      this.integralName = this.desc;
-    },
-    handleScore3() {
-      this.showCensus = false;
-      this.desc = "即将到期积分";
-      this.integralName = this.desc;
+      this.$router.back();
     },
     handleCurrentChange(e) {
       this.loading = true;
@@ -265,6 +197,10 @@ export default {
     toSearch() {
       this.pageNum = 1;
       this.getList();
+    },
+    toDetail(){
+      this.$router.push(`./outletScoreDetail?type=${this.type}`);
+
     },
     async getList() {
       this.param = {
@@ -384,6 +320,7 @@ export default {
   display: -webkit-flex;
   justify-content: space-between;
   .available_score {
+    font-size: 16px;
     color: #ff3000;
   }
   .block {

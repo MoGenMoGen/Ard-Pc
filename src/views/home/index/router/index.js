@@ -20,6 +20,8 @@ import Message from "../views/message";
 import Distributor from "../views/distributor";
 import Myaddress from "../views/myaddress";
 import Saleoutlet from "../views/saleoutlet";
+import OutletScoreCensus from "../views/outletScoreCensus";
+import OutletScoreDetail from "../views/outletScoreDetail";
 import Paydetail from "../views/paydetail";
 import Integral from "../views/myintegral";
 import AccountManager from "../views/account";
@@ -168,7 +170,21 @@ const router = new VueRouter({
           path: "saleoutlet",
           component: Saleoutlet,
           meta: {
-            title: "营业网点"
+            title: "销售网点"
+          }
+        },
+        {
+          path: "outletScoreCensus",
+          component: OutletScoreCensus,
+          meta: {
+            title: "网点积分汇总"
+          }
+        },
+        {
+          path: "outletScoreDetail",
+          component: OutletScoreDetail,
+          meta: {
+            title: "网点积分详情"
           }
         },
         {
