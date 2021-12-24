@@ -607,6 +607,46 @@ class api {
       });
     });
   }
+   //我的积分头部
+   getOneAllPoints(data) {
+     return new Promise((resolve, reject) => {
+       untilApi.get('/crm/pointsLog/apis/oneAllPoints',data).then(res => {
+         resolve(res.data);
+       });
+     });
+   }
+   //我的积分（可用积分）
+    getAvailablePoints(data) {
+      return new Promise((resolve, reject) => {
+        untilApi.get('/crm/pointsLog/apis/availablePoints',data).then(res => {
+          resolve(res);
+        });
+      });
+    }
+    //我的积分（总积分）
+     getAllPoints(data) {
+       return new Promise((resolve, reject) => {
+         untilApi.get('/crm/pointsLog/apis/allPoints',data).then(res => {
+           resolve(res);
+         });
+       });
+     }
+     //我的积分（已使用）
+      getPointsUsed(data) {
+        return new Promise((resolve, reject) => {
+          untilApi.get('/crm/pointsLog/apis/pointsUsed',data).then(res => {
+            resolve(res);
+          });
+        });
+      }
+      //我的积分（即将过期）
+       getAboutToExpirePoints(data) {
+         return new Promise((resolve, reject) => {
+           untilApi.get('/crm/pointsLog/apis/aboutToExpirePoints',data).then(res => {
+             resolve(res);
+           });
+         });
+       }
 }
 
 export { api };

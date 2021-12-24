@@ -28,20 +28,20 @@
       </p>
       <div class="score_census" v-show="showCensus">
         <div class="item">
-          <div class="line1">10000</div>
+          <div class="line1">{{info.allPoints}}</div>
           <div class="line2" @click="handleScore1">总积分</div>
         </div>
         <div class="item">
-          <div class="line1">2000</div>
+          <div class="line1">{{info.pointsUsed}}</div>
           <div class="line2" @click="handleScore2">已使用积分</div>
         </div>
         <div class="item">
-          <div class="line1">1000</div>
+          <div class="line1">{{info.aboutToExpirePoints}}</div>
           <div class="line2" @click="handleScore3">即将到期积分</div>
         </div>
       </div>
       <div class="select">
-        <div class="available_score">{{ integralName }}:800</div>
+        <div class="available_score">{{ integralName }}:{{availablePoints}}</div>
         <div class="block">
           <div class="block2">
             <el-date-picker
@@ -75,7 +75,6 @@
         }"
         :cell-style="rowStyle"
         style="width: 100%; text-align: center"
-        @row-click="toDetail"
         v-loading="loading"
       >
         <el-table-column
@@ -85,32 +84,42 @@
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="a1"
+          prop="srcNm"
           label="积分来源"
           width="170"
         ></el-table-column>
         <el-table-column
-          prop="a2"
+          prop="orderCode"
           label="订单编号"
           width="140"
         ></el-table-column>
-        <el-table-column prop="a3" label="日期" width="130"> </el-table-column>
+        <el-table-column prop="crtTm" label="日期" width="130"> </el-table-column>
         <el-table-column
           width="110"
-          prop="a4"
           label="扣减积分"
-        ></el-table-column>
+        >
+             <template slot-scope="scope">
+               <p v-if="scope.row.points<0">{{scope.row.points}}</p>
+               <p v-else>-</p>
+              </template></el-table-column>
         <el-table-column
           width="110"
-          prop="a5"
           label="奖励积分"
-        ></el-table-column>
+        >
+        <template slot-scope="scope">
+          <p v-if="scope.row.points>0">{{scope.row.points}}</p>
+          <p v-else>-</p>
+         </template></el-table-column>
         <el-table-column
           width="110"
           prop="a6"
           label="积分类型"
-        ></el-table-column>
-        <el-table-column width="130" label="到期时间" prop="a7">
+        >
+        <template slot-scope="scope">
+          <p v-if="scope.row.network">专用积分</p>
+          <p v-else>通用积分</p>
+         </template></el-table-column>
+        <el-table-column width="130" label="到期时间" prop="validTm">
         </el-table-column>
       </el-table>
     </div>
@@ -132,8 +141,12 @@ export default {
   name: "integral",
   data() {
     return {
+      buyId:'',
+      agentId:'',
+      extUserIds:'',
       dateTime: "",
       list: [],
+      availablePoints:'',//初始可用积分
       list1: [
         {
           a1: "业绩奖励",
@@ -215,6 +228,13 @@ export default {
           : "";
       }
     }
+    let obj={
+      agentId:this.agentId,
+      networkId:''
+    }
+  this.info= await this.api.getOneAllPoints(obj)
+  this.availablePoints=this.info.availablePoints
+    console.log(123,this.info);
     await this.getList();
   },
   watch: {},
@@ -234,21 +254,29 @@ export default {
     back() {
       this.showCensus = true;
       this.integralName = "可用积分";
+     this.availablePoints=this.info.availablePoints
+       this.getList()
     },
     handleScore1() {
       this.showCensus = false;
       this.desc = "总积分";
       this.integralName = this.desc;
+      this.availablePoints=this.info.allPoints
+      this.getList()
     },
     handleScore2() {
       this.showCensus = false;
       this.desc = "已使用积分";
       this.integralName = this.desc;
+      this.availablePoints=this.info.pointsUsed
+       this.getList()
     },
     handleScore3() {
       this.showCensus = false;
       this.desc = "即将到期积分";
       this.integralName = this.desc;
+      this.availablePoints=this.info.aboutToExpirePoints
+      this.getList()
     },
     handleCurrentChange(e) {
       this.loading = true;
@@ -267,34 +295,41 @@ export default {
       this.getList();
     },
     async getList() {
+      let data=''
       this.param = {
-        pageSize: this.pageSize, //每页显示的数据条数
-        pageNum: this.pageNum, //第几页
-        buyId: this.buyId, //用户账号编号
-        agentId: this.agentId,
-        extUserIds: this.extUserIds,
-        orderStartTime: this.orderStartTime, //下单开始时间
-        orderEndTime: this.orderEndTime, //下单结束时间
-        customType: this.customType, //1-定制 2-艺术定制 3-专属定制 0-标准
-        statusStr: this.status, //0-取消  100-199 为审核的状态
-        orderCode: this.orderCode, //erp返回过来的订单编号
-        orderType: this.orderType, //订单类型
+            pageNo:this.pageNum,
+            pageSize:this.pageSize,
+            agentId:this.agentId,
+            networkId:''
       };
-      let data = await this.api.myOrder(this.param);
+      if(this.integralName=='可用积分')
+      {
+       data = await this.api.getAvailablePoints(this.param);
+
+      }
+      else if(this.integralName=='总积分')
+      {
+        data = await this.api.getAllPoints(this.param);
+      }
+      else if(this.integralName=='已使用积分')
+      {
+        data = await this.api.getPointsUsed(this.param);
+      }
+      else if(this.integralName=='即将到期积分')
+      {
+        data = await this.api.getAboutToExpirePoints(this.param);
+      }
       if (data.code == 0) {
         this.loading = false;
-        this.total = data.data.total;
-        this.list = data.data.result;
-        this.list.forEach((item) => {
-          item.delieryTime = item.delieryTime
-            ? item.delieryTime.split(" ")[0]
-            : "";
-          item.crtTm = item.crtTm ? item.crtTm.split(" ")[0] : "";
-          if (item.isShortTime) {
-            item.agentName = `${item.agentName}(临时客户-${item.shortTimeName})`;
-          }
+        this.total = data.page.total;
+        this.list1 = data.data.list;
+        this.list1.forEach((item) => {
+          item.crtTm=item.crtTm?item.crtTm.substring(0,10):''
+          item.updTm=item.updTm?item.updTm.substring(0,10):''
+          item.validTm=item.validTm?item.validTm.substring(0,10):''
         });
       }
+
     },
   },
   components: {},

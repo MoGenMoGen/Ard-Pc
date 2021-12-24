@@ -38,9 +38,10 @@
        <div class="left">
          <p class="title">定制类型金额统计</p>
          <div>
-           <p>定制：<span class="white">{{info.reportCount}}</span>万</p>
+           <!-- <p>定制：<span class="white">{{info.reportCount}}</span>万</p>
            <p>艺术定制：<span class="white">{{info.reportMoney}}</span>万</p>
-           <p>专属定制：<span class="white">{{info.reportMoney}}</span>万</p>
+           <p>专属定制：<span class="white">{{info.reportMoney}}</span>万</p> -->
+           <p v-for="(item,index) in info.crmOrderDtos" :key="index">{{item.type}}<span class="white">{{item.sum}}</span>万</p>
          </div>
          <div class="chart">
         <money ref="money"></money>
@@ -169,7 +170,7 @@ export default {
       let height = this.$refs.echarts.offsetHeight - 80
       this.$refs.money.setHeight(height)
       this.$refs.receipt.setHeight(height)
-      this.$refs.product.setHeight(height)
+      this.$refs.product.setHeight(height+20)
       this.$refs.province.setHeight(height)
     })
   },
@@ -179,18 +180,10 @@ export default {
       this.api.adminData({year:year,month:month}).then(res=>{
         if(res.code === 0){
           this.info = res.data
-          let list=[
-            {name:'定制',
-            id:1,
-            value:1},
-            {name:'艺术定制',
-            id:2,
-            value:2},
-            {name:'专属定制',
-            id:3,
-            value:3},
-          ]
-          this.$refs.money.getData(list)
+          console.log(33,this.info);
+           console.log(123,this.info.crmOrderDtos);
+          this.$refs.money.getData(this.info.crmOrderDtos)
+
           this.$refs.receipt.getData(this.info.bigRegionCountList)
           this.$refs.product.getData(this.info.catTotalAmountList)
           this.$refs.province.getData(this.info.provinceTotalAmountList)

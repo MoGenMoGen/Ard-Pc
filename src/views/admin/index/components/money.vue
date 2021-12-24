@@ -38,18 +38,18 @@
         this.dataList = []
         data.forEach(item=>{
           let param = {
-            name:'',
-            value:item.value
+            name:item.type,
+            value:item.sum
           }
-          if(item.id===1){
-            param.name = '定制'
-          }
-          if(item.id===2){
-            param.name = '艺术定制'
-          }
-          if(item.id===3){
-            param.name = '专属定制'
-          }
+          // if(item.id===1){
+          //   param.name = '定制'
+          // }
+          // if(item.id===2){
+          //   param.name = '艺术定制'
+          // }
+          // if(item.id===3){
+          //   param.name = '专属定制'
+          // }
 
           this.typeList.push(param.name)
           this.dataList.push(param)
