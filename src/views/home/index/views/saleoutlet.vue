@@ -104,16 +104,8 @@ export default {
     let userInfo = this.until.loGet("userInfo");
     if (userInfo) {
       this.userInfo = JSON.parse(userInfo);
-      if (this.userInfo.userType === 2) {
-        this.agentId = this.userInfo.agentInfoId;
-      } else {
-        this.buyId = this.userInfo.userId;
-        this.extUserIds = this.userInfo.extUserIds
-          ? this.userInfo.extUserIds
-          : "";
-      }
     }
-    // await this.getList();
+    await this.getList();
   },
 
   methods: {
@@ -131,33 +123,26 @@ export default {
     },
     async getList() {
       this.param = {
-        pageSize: this.pageSize, //每页显示的数据条数
-        pageNum: this.pageNum, //第几页
-        buyId: this.buyId, //用户账号编号
-        agentId: this.agentId,
-        extUserIds: this.extUserIds,
-        orderStartTime: this.orderStartTime, //下单开始时间
-        orderEndTime: this.orderEndTime, //下单结束时间
-        customType: this.customType, //1-定制 2-艺术定制 3-专属定制 0-标准
-        statusStr: this.status, //0-取消  100-199 为审核的状态
-        orderCode: this.orderCode, //erp返回过来的订单编号
-        orderType: this.orderType, //订单类型
+        pageNo: this.pageNum,
+        pageSize: this.pageSize,
+        userId: this.userInfo.userId,
       };
-      let data = await this.api.myOrder(this.param);
-      if (data.code == 0) {
-        this.loading = false;
-        this.total = data.data.total;
-        this.list = data.data.result;
-        this.list.forEach((item) => {
-          item.delieryTime = item.delieryTime
-            ? item.delieryTime.split(" ")[0]
-            : "";
-          item.crtTm = item.crtTm ? item.crtTm.split(" ")[0] : "";
-          if (item.isShortTime) {
-            item.agentName = `${item.agentName}(临时客户-${item.shortTimeName})`;
-          }
-        });
-      }
+      let data = await this.api.getNetWorkScoreList(this.param);
+      console.log({data});
+      // if (data.code == 0) {
+      //   this.loading = false;
+      //   this.total = data.data.total;
+      //   this.list = data.data.result;
+      //   this.list.forEach((item) => {
+      //     item.delieryTime = item.delieryTime
+      //       ? item.delieryTime.split(" ")[0]
+      //       : "";
+      //     item.crtTm = item.crtTm ? item.crtTm.split(" ")[0] : "";
+      //     if (item.isShortTime) {
+      //       item.agentName = `${item.agentName}(临时客户-${item.shortTimeName})`;
+      //     }
+      //   });
+      // }
     },
     // 总积分一栏
     handleCensusScore1() {

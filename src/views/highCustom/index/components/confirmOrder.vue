@@ -655,6 +655,7 @@ export default {
       this.addNetworkVisible = false;
     },
     submit(form) {
+      console.log('新增地址',this.form);
       this.form = { ...form };
       let msg = this.reg.checkPhone(this.form.linkPhone);
       if (msg !== "ok") {

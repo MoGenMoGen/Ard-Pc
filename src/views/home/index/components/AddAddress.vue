@@ -22,7 +22,7 @@
       </div>
       <div class="center-div">
         <p>营业网点：</p>
-        <el-select v-model="form.networkId" filterable  clearable >
+        <el-select v-model="form.networkId" filterable  clearable  style="width:260px;">
           <el-option
             v-for="item in networkList"
             :key="item.crmNetworkVo.id"

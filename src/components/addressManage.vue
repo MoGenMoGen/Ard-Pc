@@ -58,6 +58,7 @@ export default {
       this.$router.push("/service/myaddress?type=order");
     },
     choose(item) {
+      console.log(111,item);
       this.$emit("changeAddr", item);
     }
   }

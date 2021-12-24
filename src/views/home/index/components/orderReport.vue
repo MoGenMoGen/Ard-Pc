@@ -9,7 +9,7 @@ export default {
       //   height: 0,
       myChart: null,
       dimensions: [
-        "product",
+        "product",   
         "累计订单总额:7000元",
         "本年度订单总额：7000",
         "本年度已完成订单总额：0",

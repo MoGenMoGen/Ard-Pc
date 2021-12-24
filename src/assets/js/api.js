@@ -2,7 +2,7 @@ import { until } from "./until";
 const untilApi = new until();
 import { Message } from "element-ui";
 // const hosturl='https://order.ilikeit-runner.com'
-const hosturl='https://order.ilikeit-runner.com'
+const hosturl = 'https://order.ilikeit-runner.com'
 class api {
   //产品线
   getProductCatList() {
@@ -164,7 +164,7 @@ class api {
     });
   }
   //获得营业网点List信息
-  getNetworkList(){
+  getNetworkList() {
     return new Promise((resolve, reject) => {
       untilApi.get("/crm/network/api/myList").then(res => {
         resolve(res);
@@ -334,7 +334,7 @@ class api {
   }
   //营业网点删除
   networkDelet(id) {
-    return untilApi.get("/crm/network/api/del?ids=" + id );
+    return untilApi.get("/crm/network/api/del?ids=" + id);
   }
   //物流信息
   logistics(data) {
@@ -591,12 +591,12 @@ class api {
 
   //根据id得到经销商的订单类型
   getAgentOrdrType(id) {
-    return untilApi.get('/crm/agent/api/agentOrderType/'+id);
+    return untilApi.get('/crm/agent/api/agentOrderType/' + id);
   }
 
   //复制订单确定
-  copyOrderComfirm(data){
-    return untilApi.post('/crm/order/api/copy',data)
+  copyOrderComfirm(data) {
+    return untilApi.post('/crm/order/api/copy', data)
   }
 
   //确定/取消订单变更 、
@@ -607,46 +607,54 @@ class api {
       });
     });
   }
-   //我的积分头部
-   getOneAllPoints(data) {
-     return new Promise((resolve, reject) => {
-       untilApi.get('/crm/pointsLog/apis/oneAllPoints',data).then(res => {
-         resolve(res.data);
-       });
-     });
-   }
-   //我的积分（可用积分）
-    getAvailablePoints(data) {
-      return new Promise((resolve, reject) => {
-        untilApi.get('/crm/pointsLog/apis/availablePoints',data).then(res => {
-          resolve(res);
-        });
+  //我的积分头部
+  getOneAllPoints(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get('/crm/pointsLog/apis/oneAllPoints', data).then(res => {
+        resolve(res.data);
       });
-    }
-    //我的积分（总积分）
-     getAllPoints(data) {
-       return new Promise((resolve, reject) => {
-         untilApi.get('/crm/pointsLog/apis/allPoints',data).then(res => {
-           resolve(res);
-         });
-       });
-     }
-     //我的积分（已使用）
-      getPointsUsed(data) {
-        return new Promise((resolve, reject) => {
-          untilApi.get('/crm/pointsLog/apis/pointsUsed',data).then(res => {
-            resolve(res);
-          });
-        });
-      }
-      //我的积分（即将过期）
-       getAboutToExpirePoints(data) {
-         return new Promise((resolve, reject) => {
-           untilApi.get('/crm/pointsLog/apis/aboutToExpirePoints',data).then(res => {
-             resolve(res);
-           });
-         });
-       }
+    });
+  }
+  //我的积分（可用积分）
+  getAvailablePoints(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get('/crm/pointsLog/apis/availablePoints', data).then(res => {
+        resolve(res);
+      });
+    });
+  }
+  //我的积分（总积分）
+  getAllPoints(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get('/crm/pointsLog/apis/allPoints', data).then(res => {
+        resolve(res);
+      });
+    });
+  }
+  //我的积分（已使用）
+  getPointsUsed(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get('/crm/pointsLog/apis/pointsUsed', data).then(res => {
+        resolve(res);
+      });
+    });
+  }
+  //我的积分（即将过期）
+  getAboutToExpirePoints(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get('/crm/pointsLog/apis/aboutToExpirePoints', data).then(res => {
+        resolve(res);
+      });
+    });
+  }
+  // 销售网点下营业网点积分列表 
+  getNetWorkScoreList(data) {
+    return new Promise((resolve, reject) => {
+      untilApi.get("/crm/pointsLog/apis/networkPage", data).then(res => {
+        resolve(res);
+      });
+    });
+  }
 }
 
 export { api };
