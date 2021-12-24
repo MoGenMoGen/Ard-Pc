@@ -2,23 +2,25 @@
   <!--个人中心-->
   <div id="personal">
     <div id="top1">
-      <span id="name">{{mydata.realName}}</span>
-      <span id="phone">{{mydata.linkPhone}}</span>
-      <span id="date">协议到期日：{{mydata.validTime}}</span>
+      <span id="name">{{ mydata.realName }}</span>
+      <span id="phone">{{ mydata.linkPhone }}</span>
+      <span id="date">协议到期日：{{ mydata.validTime }}</span>
     </div>
-    <p id="company">{{mydata.agentInfoName}}</p>
+    <p id="company">{{ mydata.agentInfoName }}</p>
     <div id="manage">
       <a @click="myaccount">账户管理 ></a>
-      <div v-show="showStatic">
+      <!-- <div v-show="showStatic">
         <p @click="toPayDetail">累计订单总额: ￥{{staticData.totalOrderPrice}}</p>
         <p>本年度订单总额: ￥{{staticData.thisYearOrderPrice}}</p>
         <p>本年度已完成订单总额: ￥{{staticData.thisYearEndOrderPrice}}</p>
         <p @click="toPayDetail">累计应付金额: ￥{{staticData.totalOrderPrice}}</p>
         <p @click="toPayDetail">累计已付金额: ￥{{staticData.payedAmountSum}}</p>
         <p @click="toPayDetail">累计待付金额: ￥{{staticData.unpaidAmountSum}}</p>
-      </div>
+      </div> -->
     </div>
-    <div id="border1"></div>
+    <div id="echarts" ref="echarts">
+      <order-report ref="orderReport"></order-report>
+    </div>
 
     <div id="bottom">
       <div id="message" class="table1">
@@ -40,7 +42,7 @@
           </div>
         </div>
       </div>
-       <div id="integral" class="table1">
+      <div id="integral" class="table1">
         <div class="neikuang" @click="myintegral">
           <img class="neikuang-img" src="../images/jifen.png" />
           <div class="neikuang-div">
@@ -72,41 +74,49 @@
 </template>
 
 <script>
+import orderReport from "../components/orderReport";
+
 export default {
   name: "personal",
   methods: {
-    mymessage: function() {
+    mymessage: function () {
       this.$router.push("./message");
     },
-    myorder: function() {
+    myorder: function () {
       this.$router.push("./order");
     },
-    myintegral:function() {
+    myintegral: function () {
       // this.$router.push(".");
     },
-    myaddress: function() {
+    myaddress: function () {
       this.$router.push("./myaddress");
     },
-    myfeedback: function() {
+    myfeedback: function () {
       this.$router.push("./feedback");
     },
-    myaccount: function() {
+    myaccount: function () {
       this.$router.push("./account");
     },
     async getOrderStatisData(code) {
       const param = { agentInfoCode: code };
       this.staticData = await this.api.getSysOrderStatisData(param);
     },
-    toPayDetail(){
+    toPayDetail() {
       this.$router.push("./paydetail");
-    }
+    },
+    getData() {
+      this.$refs.orderReport.getData([]);
+    },
   },
   data() {
     return {
       mydata: {},
       showStatic: false,
-      staticData: {}
+      staticData: {},
     };
+  },
+  components: {
+    orderReport,
   },
   async mounted() {
     console.log("进入我的个人中心:");
@@ -121,7 +131,8 @@ export default {
       this.showStatic = false;
     }
     console.log(res.data.userInfo);
-  }
+    this.getData();
+  },
 };
 </script>
 
@@ -167,19 +178,16 @@ img {
   width: 33.3%;
   height: 50%;
 }
-#border1 {
-  height: 1px;
-  width: 100%;
-  background: #e1e1e1;
-  // margin-left: 57px;
-  margin-top: 20px;
+#echarts{
+  width: 950px;
 }
+
 
 #personal {
   // padding-top: 14px;
-  padding:44px 67px 40px 40px;
+  padding: 44px 67px 40px 40px;
   box-sizing: border-box;
-  height: 606px;
+  // height: 606px;
   width: 950px;
   background: white;
 }
@@ -206,10 +214,12 @@ img {
   font-size: 18px;
 }
 #manage {
-  margin: 27px 0 0 60px;
+  padding: 27px 0 25px 60px;
+  box-sizing: border-box;
   font-size: 14px;
   display: flex;
   flex-flow: column wrap;
+  border-bottom: 1px solid #e1e1e1;
   a {
     flex: 1;
     color: #2196f3;

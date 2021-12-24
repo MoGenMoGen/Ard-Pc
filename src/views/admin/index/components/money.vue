@@ -58,6 +58,7 @@
         this.init()
       },
       init(){
+        console.log('init2222222222');
         this.myChart = this.$echarts.init(document.getElementById('money'))
 
         var option = {

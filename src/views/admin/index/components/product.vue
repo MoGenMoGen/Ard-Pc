@@ -23,7 +23,7 @@
         this.height = data+'px'
       },
       getData(data){
-        console.log('重新赋值')
+        console.log('重新赋值',data)
         this.nameList = []
         this.dataList = []
         data.forEach(item=>{
