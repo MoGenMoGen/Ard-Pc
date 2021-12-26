@@ -615,34 +615,34 @@ class api {
       });
     });
   }
-  //我的积分（可用积分）
+  //经销商/销售网点积分（可用积分）
   getAvailablePoints(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get('/crm/pointsLog/apis/availablePoints', data).then(res => {
+      untilApi.get('/crm/pointsLog/apis/availablePoints?query=' + data).then(res => {
         resolve(res);
       });
     });
   }
-  //我的积分（总积分）
+  //经销商/销售网点积分（总积分）
   getAllPoints(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get('/crm/pointsLog/apis/allPoints', data).then(res => {
+      untilApi.get('/crm/pointsLog/apis/allPoints?query=' + data).then(res => {
         resolve(res);
       });
     });
   }
-  //我的积分（已使用）
+  //经销商/销售网点积分（已使用）
   getPointsUsed(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get('/crm/pointsLog/apis/pointsUsed', data).then(res => {
+      untilApi.get('/crm/pointsLog/apis/pointsUsed?query=' + data).then(res => {
         resolve(res);
       });
     });
   }
-  //我的积分（即将过期）
+  //经销商/销售网点积分（即将过期）
   getAboutToExpirePoints(data) {
     return new Promise((resolve, reject) => {
-      untilApi.get('/crm/pointsLog/apis/aboutToExpirePoints', data).then(res => {
+      untilApi.get('/crm/pointsLog/apis/aboutToExpirePoints?query=' + data).then(res => {
         resolve(res);
       });
     });
@@ -652,6 +652,22 @@ class api {
     return new Promise((resolve, reject) => {
       untilApi.get("/crm/pointsLog/apis/networkPage", data).then(res => {
         resolve(res);
+      });
+    });
+  }
+  // 获取网点积分统计数据
+  getOneAllNetworkPoints() {
+    return new Promise((resolve, reject) => {
+      untilApi.get('/crm/pointsLog/apis/oneAllNetworkPoints').then(res => {
+        resolve(res.data);
+      });
+    });
+  }
+  //个人中心订单统计柱状图
+  getMyCenter(){
+    return new Promise((resolve, reject) => {
+      untilApi.get('/crm/pointsLog/apis/getMyCenter').then(res => {
+        resolve(res.data);
       });
     });
   }

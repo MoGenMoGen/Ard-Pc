@@ -18,7 +18,7 @@
         <p @click="toPayDetail">累计待付金额: ￥{{staticData.unpaidAmountSum}}</p>
       </div> -->
     </div>
-    <div id="echarts" ref="echarts">
+    <div id="echarts" ref="echarts" v-show="showStatic">
       <order-report ref="orderReport"></order-report>
     </div>
 
@@ -42,7 +42,7 @@
           </div>
         </div>
       </div>
-      <div id="integral" class="table1">
+      <div id="integral" class="table1" v-show="showStatic">
         <div class="neikuang" @click="myintegral">
           <img class="neikuang-img" src="../images/jifen.png" />
           <div class="neikuang-div">
@@ -104,8 +104,24 @@ export default {
     toPayDetail() {
       this.$router.push("./paydetail");
     },
-    getData() {
-      this.$refs.orderReport.getData([]);
+    async getData() {
+      let sum1 = 0;
+      let sum2 = 0;
+      let sum3 = 0;
+      let data = await this.api.getMyCenter();
+      sum1 = data.reduce((sum, item) => sum + Number(item[1]), 0);
+      sum2 = data.reduce((sum, item) => sum + Number(item[2]), 0);
+      sum3 = data.reduce((sum, item) => sum + Number(item[3]), 0);
+      let str1 = "product";
+      let str2 = `累计订单总额：${sum1}元`;
+      let str3 = `本年度订单总额：${sum2}元`;
+      let str4 = `本年度已完成订单总额：${sum3}元`;
+      let arr = [];
+      arr.push(str1, str2, str3, str4);
+      console.log(arr);
+      let source = [arr, ...data];
+      console.log(source);
+      this.$refs.orderReport.getData(source);
     },
   },
   data() {
@@ -126,12 +142,12 @@ export default {
     this.mydata = res.data.userInfo;
     if (this.mydata.userType === 2) {
       this.showStatic = true;
-      this.getOrderStatisData(this.mydata.agentInfoCode);
+      this.getData();
+      // this.getOrderStatisData(this.mydata.agentInfoCode);
     } else {
       this.showStatic = false;
     }
     console.log(res.data.userInfo);
-    this.getData();
   },
 };
 </script>
@@ -178,10 +194,9 @@ img {
   width: 33.3%;
   height: 50%;
 }
-#echarts{
+#echarts {
   width: 950px;
 }
-
 
 #personal {
   // padding-top: 14px;

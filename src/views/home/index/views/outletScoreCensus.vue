@@ -22,11 +22,11 @@
         >
       </p>
       <div class="select">
-        <div class="available_score">{{ integralName }}：800</div>
+        <div class="available_score">{{ integralName }}：{{ Score }}</div>
         <div class="block">
           <div class="block2">
             <el-select
-              v-model="value1"
+              v-model="networkNm"
               filterable
               clearable
               placeholder="请输入网点名称"
@@ -35,8 +35,8 @@
               <el-option
                 v-for="(item, index) in options"
                 :key="index"
-                :label="item.val"
-                :value="item.val"
+                :label="item"
+                :value="item"
               >
               </el-option>
             </el-select>
@@ -50,13 +50,12 @@
 
     <div class="table-header">
       <el-table
-        :data="list1"
+        :data="list"
         :header-cell-style="{
           background: '#eee',
           color: '#999',
           'text-align': 'center',
-          padding:'0'
-
+          padding: '0',
         }"
         :cell-style="rowStyle"
         style="width: 100%; text-align: center"
@@ -69,16 +68,17 @@
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="a1"
+          prop="network"
           label="网点名称"
           width="280"
         ></el-table-column>
         <el-table-column
-          prop="a2"
-          label="可用积分"
+          :prop="scoreVal"
+          :label="scoreNm"
           width="200"
         ></el-table-column>
-        <el-table-column prop="a3" label="积分类型" width="200">
+        <el-table-column label="积分类型" width="200">
+          专用积分
         </el-table-column>
         <el-table-column width="220" label="操作">
           <template slot-scope="score">
@@ -91,7 +91,7 @@
                   cursor: pointer;
                 }
               "
-              @click="toDetail(score.row.id)"
+              @click="toDetail(score.row.networkId)"
             >
               查看详情
             </div>
@@ -118,61 +118,62 @@ export default {
   data() {
     return {
       list: [],
-      list1: [
-        {
-          a1: "宁波聚联科技有限公司（市代）1",
-          a2: "2000",
-          a3: "通用积分",
-        },
-        {
-          a1: "宁波聚联科技有限公司（市代）2",
-          a2: "2000",
-          a3: "通用积分",
-        },
-        {
-          a1: "宁波聚联科技有限公司（市代）3",
-          a2: "2000",
-          a3: "通用积分",
-        },
-      ],
+      Score: "",
+      scoreNm: "",
+      scoreVal: "",
       integralName: "",
-      pageNum: 1,
+      pageNum: 1,  
       pageSize: 10,
       total: 0,
       userInfo: {},
       loading: false,
       param: {},
       info: {},
-      value1: "",
-      options: [
-        { val: "宁波聚联科技有限公司（市代）1" },
-        { val: "宁波聚联科技有限公司（市代）2" },
-        { val: "宁波聚联科技有限公司（市代）3" },
-        { val: "宁波聚联科技有限公司（市代）4" },
-      ],
-      type:0,//1:总积分，2:可用积分，3:已使用积分，4:即将到期积分
-
+      networkNm: "",
+      options: [],
+      type: 0, //1:总积分，2:可用积分，3:已使用积分，4:即将到期积分
     };
   },
   async mounted() {
-      this.type=Number(this.$route.query.type);
-      switch(this.type){
-          case 1:
-              this.integralName="全部销售网点总积分";
-              break;
-          case 2:
-              this.integralName="全部销售网点可用积分";
-              break;
-          case 3:
-              this.integralName="全部销售网点已使用积分";
-              break;
+    this.type = Number(this.$route.query.type);
+    let userInfo = this.until.loGet("userInfo");
+    if (userInfo) {
+      this.userInfo = JSON.parse(userInfo);
+    }
+    //获取所有网点积分统计数据
+    this.info = await this.api.getOneAllNetworkPoints();
 
-          case 4:
-              this.integralName="全部销售网点即将到期积分";
-              break;
-
-      }
-    // await this.getList();
+    switch (this.type) {
+      case 1:
+        this.integralName = "全部销售网点总积分";
+        this.scoreNm = "总积分";
+        this.scoreVal = "allPoints";
+        this.Score = this.info.allPoints;
+        break;
+      case 2:
+        this.integralName = "全部销售网点可用积分";
+        this.scoreNm = "可用积分";
+        this.scoreVal = "availablePoints";
+        this.Score = this.info.availablePoints;
+        break;
+      case 3:
+        this.integralName = "全部销售网点已使用积分";
+        this.scoreNm = "已使用积分";
+        this.scoreVal = "pointsUsed";
+        this.Score = this.info.pointsUsed;
+        break;
+      case 4:
+        this.integralName = "全部销售网点即将到期积分";
+        this.scoreNm = "即将到期积分";
+        this.scoreVal = "aboutToExpirePoints";
+        this.Score = this.info.aboutToExpirePoints;
+        break;
+    }
+    //网点列表
+    let res = await this.api.getNetwork({ pageNum: 1, pageSize: 1000 });
+    console.log({ res });
+    this.options = res.data.records.map((item) => item.crmNetworkVo.name);
+    await this.getList();
   },
   watch: {},
   methods: {
@@ -198,38 +199,21 @@ export default {
       this.pageNum = 1;
       this.getList();
     },
-    toDetail(){
-      this.$router.push(`./outletScoreDetail?type=${this.type}`);
-
+    toDetail(id) {
+      this.$router.push(`./outletScoreDetail?id=${id}&type=${this.type}`);
     },
     async getList() {
       this.param = {
-        pageSize: this.pageSize, //每页显示的数据条数
-        pageNum: this.pageNum, //第几页
-        buyId: this.buyId, //用户账号编号
-        agentId: this.agentId,
-        extUserIds: this.extUserIds,
-        orderStartTime: this.orderStartTime, //下单开始时间
-        orderEndTime: this.orderEndTime, //下单结束时间
-        customType: this.customType, //1-定制 2-艺术定制 3-专属定制 0-标准
-        statusStr: this.status, //0-取消  100-199 为审核的状态
-        orderCode: this.orderCode, //erp返回过来的订单编号
-        orderType: this.orderType, //订单类型
+        pageNo: this.pageNum,
+        pageSize: this.pageSize,
+        userId: this.userInfo.userId,
+        name: this.networkNm,
       };
-      let data = await this.api.myOrder(this.param);
+      let data = await this.api.getNetWorkScoreList(this.param);
       if (data.code == 0) {
         this.loading = false;
         this.total = data.data.total;
-        this.list = data.data.result;
-        this.list.forEach((item) => {
-          item.delieryTime = item.delieryTime
-            ? item.delieryTime.split(" ")[0]
-            : "";
-          item.crtTm = item.crtTm ? item.crtTm.split(" ")[0] : "";
-          if (item.isShortTime) {
-            item.agentName = `${item.agentName}(临时客户-${item.shortTimeName})`;
-          }
-        });
+        this.list = data.data.records;
       }
     },
   },

@@ -20,6 +20,7 @@ import 'assets/js/wconfig.js';
 import './iconfont'  //字体库
 import './wconfig.js'
 import {Query} from 'assets/js/query'
+import query from 'assets/js/newquery'
 import {api} from './api'
 import store from './store'
 // import 'assets/js/Ios';
@@ -43,6 +44,7 @@ export default{
     Vue.prototype.app=new app();
     Vue.prototype.reg = new reg();
     Vue.prototype.Query = Query;
+    Vue.prototype.query = query;
 
   }
 }

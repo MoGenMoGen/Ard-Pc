@@ -1,5 +1,5 @@
 <template>
-  <div id="center" v-bind:style="{backgroundImage:'url(' + bgImgUrl+ ')'}">
+  <div id="center" v-bind:style="{ backgroundImage: 'url(' + bgImgUrl + ')' }">
     <div class="form1">
       <p class="p3">登录</p>
       <div id="div1">
@@ -9,7 +9,12 @@
 
       <div id="div2">
         <img class="form_img" id="img2" src="../pic/ic-pwd.png" />
-        <input type="password" placeholder="请输入密码" v-model="password" @keyup.enter="login" />
+        <input
+          type="password"
+          placeholder="请输入密码"
+          v-model="password"
+          @keyup.enter="login"
+        />
       </div>
 
       <!--<button id="button1_forget" @click="changeTab">忘记密码?</button>-->
@@ -28,7 +33,7 @@ export default {
     return {
       username: "",
       password: "",
-      bgImgUrl: ""
+      bgImgUrl: "",
     };
   },
   mounted() {
@@ -46,34 +51,36 @@ export default {
     async login() {
       let param = {
         username: this.username,
-        password: this.password
+        password: this.password,
       };
 
       let res = await this.api.postSysLogin(param);
-      if (res.code === 0) {
+      console.log({ res });
+      if (res.code == 0) {
         this.until.loSave("userInfo", JSON.stringify(res.data.userInfo));
         this.$message({
           message: "登录成功",
-          type: "success"
+          type: "success",
         });
 
-        if (res.data.userInfo.loginTotal === 0) {
-          this.until.href("../home/index.html#/service/changepass")
+        if (res.data.userInfo.loginTotal == 0) {
+          this.until.href("../home/index.html#/service/changepass");
         } else {
           setTimeout(() => {
             const redirect = this.$route.query.redirect;
             if (redirect) {
               this.$router.push(redirect);
             } else {
-              // this.$router.back();
-              //跳转首页
-              this.until.href("../home/index.html");
+              console.log("首页");
+              //       // this.$router.back();
+              //       //跳转首页
+                    this.until.href("../home/index.html");
             }
           }, 1000);
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

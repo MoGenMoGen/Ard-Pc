@@ -10,41 +10,53 @@
     </div>
     <div class="score_census" style="height: 123px">
       <div class="item_census" style="height: 123px">
-        <div class="line1">30000</div>
+        <div class="line1">{{ info.allPoints }}</div>
         <div class="line2" @click="handleCensusScore1">总积分</div>
       </div>
       <div class="item_census" style="height: 123px">
-        <div class="line1">24000</div>
+        <div class="line1">{{ info.availablePoints }}</div>
         <div class="line2" @click="handleCensusScore2">可用积分</div>
       </div>
       <div class="item_census" style="height: 123px">
-        <div class="line1">8000</div>
+        <div class="line1">{{ info.pointsUsed }}</div>
         <div class="line2" @click="handleCensusScore3">已使用积分</div>
       </div>
       <div class="item_census" style="height: 123px">
-        <div class="line1" style="color: #ff3000">3000</div>
+        <div class="line1" style="color: #ff3000">
+          {{ info.aboutToExpirePoints }}
+        </div>
         <div class="line2" @click="handleCensusScore4">即将到期积分</div>
       </div>
     </div>
     <div class="list">
       <div class="item" v-for="(item, index) in list" :key="index">
-        <div class="title">网点名称:{{ item.name }}</div>
+        <div class="title">网点名称:{{ item.network }}</div>
         <div class="score_census">
           <div class="item_census">
-            <div class="line1">{{ item.val1 }}</div>
-            <div class="line2" @click="handleScore1">总积分</div>
+            <div class="line1">{{ item.allPoints }}</div>
+            <div class="line2" @click="handleScore1(item.networkId)">
+              总积分
+            </div>
           </div>
           <div class="item_census">
-            <div class="line1">{{ item.val2 }}</div>
-            <div class="line2" @click="handleScore2">可用积分</div>
+            <div class="line1">{{ item.availablePoints }}</div>
+            <div class="line2" @click="handleScore2(item.networkId)">
+              可用积分
+            </div>
           </div>
           <div class="item_census">
-            <div class="line1">{{ item.val3 }}</div>
-            <div class="line2" @click="handleScore3">已使用积分</div>
+            <div class="line1">{{ item.pointsUsed }}</div>
+            <div class="line2" @click="handleScore3(item.networkId)">
+              已使用积分
+            </div>
           </div>
           <div class="item_census">
-            <div class="line1" style="color: #ff3000">{{ item.val4 }}</div>
-            <div class="line2" @click="handleScore4">即将到期积分</div>
+            <div class="line1" style="color: #ff3000">
+              {{ item.aboutToExpirePoints }}
+            </div>
+            <div class="line2" @click="handleScore4(item.networkId)">
+              即将到期积分
+            </div>
           </div>
         </div>
       </div>
@@ -96,15 +108,15 @@ export default {
       userInfo: {},
       loading: false,
       param: {},
-      info: {},
+      info: {},  
     };
   },
   async mounted() {
-    //改成经销商Id
     let userInfo = this.until.loGet("userInfo");
     if (userInfo) {
       this.userInfo = JSON.parse(userInfo);
     }
+    this.info = await this.api.getOneAllNetworkPoints();
     await this.getList();
   },
 
@@ -126,23 +138,14 @@ export default {
         pageNo: this.pageNum,
         pageSize: this.pageSize,
         userId: this.userInfo.userId,
+        name:''
       };
       let data = await this.api.getNetWorkScoreList(this.param);
-      console.log({data});
-      // if (data.code == 0) {
-      //   this.loading = false;
-      //   this.total = data.data.total;
-      //   this.list = data.data.result;
-      //   this.list.forEach((item) => {
-      //     item.delieryTime = item.delieryTime
-      //       ? item.delieryTime.split(" ")[0]
-      //       : "";
-      //     item.crtTm = item.crtTm ? item.crtTm.split(" ")[0] : "";
-      //     if (item.isShortTime) {
-      //       item.agentName = `${item.agentName}(临时客户-${item.shortTimeName})`;
-      //     }
-      //   });
-      // }
+      if (data.code == 0) {
+        this.loading = false;
+        this.total = data.data.total;
+        this.list = data.data.records;
+      }
     },
     // 总积分一栏
     handleCensusScore1() {
@@ -158,18 +161,17 @@ export default {
       this.$router.push("./outletScoreCensus?type=4");
     },
     // 积分项一栏
-    handleScore1() {
-      this.$router.push("./outletScoreDetail?type=1");
+    handleScore1(id) {
+      this.$router.push(`./outletScoreDetail?id=${id}&type=1`);
     },
-    handleScore2() {
-      this.$router.push("./outletScoreDetail?type=2");
+    handleScore2(id) {
+      this.$router.push(`./outletScoreDetail?id=${id}&type=2`);
     },
-    handleScore3() {
-      this.$router.push("./outletScoreDetail?type=3");
+    handleScore3(id) {
+      this.$router.push(`./outletScoreDetail?id=${id}&type=3`);
     },
-    handleScore4() {
-      this.$router.push("./outletScoreDetail?type=4");
-      // console.log(111);
+    handleScore4(id) {
+      this.$router.push(`./outletScoreDetail?id=${id}&type=4`);
     },
   },
   components: {},

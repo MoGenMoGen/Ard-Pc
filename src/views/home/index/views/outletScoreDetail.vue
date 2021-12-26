@@ -7,7 +7,7 @@
   >
     <div class="top2">
       <p class="name" style="border-bottom: 1px solid #e1e1e1">
-        {{ info.nm }}
+        {{ userInfo.corpName }}
         <span
           style="
             float: right;
@@ -22,12 +22,12 @@
         >
       </p>
       <div class="info">
-        <p>联系人：{{ info.linkman }}</p>
-        <p>联系电话：{{ info.tel }}</p>
-        <p>收货地址：{{ info.address }}</p>
+        <p>联系人：{{ userInfo.linkMan  }}</p>
+        <p>联系电话：{{ userInfo.linkPhone  }}</p>
+        <p>收货地址：{{ userInfo.address  }}</p>
       </div>
       <div class="select">
-        <div class="available_score">{{ integralName }}：800</div>
+        <div class="available_score">{{ integralName }}：{{ Score }}</div>
         <div class="block">
           <div class="block2">
             <el-date-picker
@@ -57,7 +57,7 @@
           background: '#eee',
           color: '#999',
           'text-align': 'center',
-          padding:'0'
+          padding: '0',
         }"
         :cell-style="rowStyle"
         style="width: 100%; text-align: center"
@@ -71,32 +71,36 @@
           align="center"
         ></el-table-column>
         <el-table-column
-          prop="a1"
+          prop="srcNm"
           label="积分来源"
           width="170"
         ></el-table-column>
         <el-table-column
-          prop="a2"
+          prop="orderCode"
           label="订单编号"
           width="140"
         ></el-table-column>
-        <el-table-column prop="a3" label="日期" width="130"> </el-table-column>
-        <el-table-column
-          width="110"
-          prop="a4"
-          label="扣减积分"
-        ></el-table-column>
-        <el-table-column
-          width="110"
-          prop="a5"
-          label="奖励积分"
-        ></el-table-column>
-        <el-table-column
-          width="110"
-          prop="a6"
-          label="积分类型"
-        ></el-table-column>
-        <el-table-column width="130" label="到期时间" prop="a7">
+        <el-table-column prop="crtTm" label="日期" width="130">
+        </el-table-column>
+        <el-table-column width="110" label="扣减积分">
+          <template slot-scope="scope">
+            <p v-if="scope.row.points < 0">{{ scope.row.points }}</p>
+            <p v-else>-</p>
+          </template></el-table-column
+        >
+        <el-table-column width="110" label="奖励积分">
+          <template slot-scope="scope">
+            <p v-if="scope.row.points > 0">{{ scope.row.points }}</p>
+            <p v-else>-</p>
+          </template></el-table-column
+        >
+        <el-table-column width="110" prop="a6" label="积分类型">
+          <template slot-scope="scope">
+            <p v-if="scope.row.network">专用积分</p>
+            <p v-else>通用积分</p>
+          </template></el-table-column
+        >
+        <el-table-column width="130" label="到期时间" prop="validTm">
         </el-table-column>
       </el-table>
     </div>
@@ -119,43 +123,15 @@ export default {
   data() {
     return {
       dateTime: "",
-      list: [],
-      list1: [
-        {
-          a1: "业绩奖励",
-          a2: "202112058-皖",
-          a3: "2021-11-12",
-          a4: "-50",
-          a5: "2000",
-          a6: "通用积分",
-          a7: "2022-12-06",
-        },
-        {
-          a1: "业绩奖励",
-          a2: "202112058-皖",
-          a3: "2021-11-12",
-          a4: "-50",
-          a5: "2000",
-          a6: "通用积分",
-          a7: "2022-12-06",
-        },
-      ],
+      id: "",
+      list1: [],
       integralName: "",
+      Score: "",
       pageNum: 1,
       pageSize: 10,
       total: 0,
       userInfo: {},
       loading: false,
-      param: {},
-      info: {
-        nm: "宁波聚联科技有限公司（市代）",
-        linkman: "张三",
-        tel: "12345678910",
-        address: "浙江省宁波市镇海区",
-        score: 8000,
-        st: "",
-        et: "",
-      },
       type: 0, //1:总积分，2:可用积分，3:已使用积分，4:即将到期积分
       pickerOptions: {
         shortcuts: [
@@ -192,6 +168,12 @@ export default {
   },
   async mounted() {
     this.type = Number(this.$route.query.type);
+    this.id = Number(this.$route.query.id);
+    let userInfo = this.until.loGet("userInfo");
+    if (userInfo) {
+      this.userInfo = JSON.parse(userInfo);
+    }
+
     switch (this.type) {
       case 1:
         this.integralName = "总积分";
@@ -202,12 +184,12 @@ export default {
       case 3:
         this.integralName = "已使用积分";
         break;
-
       case 4:
         this.integralName = "即将到期积分";
         break;
     }
-    // await this.getList();
+
+    await this.getList();
   },
   watch: {},
   methods: {
@@ -244,32 +226,31 @@ export default {
     },
     toDetail() {},
     async getList() {
-      this.param = {
-        pageSize: this.pageSize, //每页显示的数据条数
-        pageNum: this.pageNum, //第几页
-        buyId: this.buyId, //用户账号编号
-        agentId: this.agentId,
-        extUserIds: this.extUserIds,
-        orderStartTime: this.orderStartTime, //下单开始时间
-        orderEndTime: this.orderEndTime, //下单结束时间
-        customType: this.customType, //1-定制 2-艺术定制 3-专属定制 0-标准
-        statusStr: this.status, //0-取消  100-199 为审核的状态
-        orderCode: this.orderCode, //erp返回过来的订单编号
-        orderType: this.orderType, //订单类型
-      };
-      let data = await this.api.myOrder(this.param);
+      let data = "";
+      let qry = this.query.new();
+      this.query.toW(qry, "networkId", this.id, "EQ");
+      this.query.toW(qry, "crtTm", this.st, "gt");
+      this.query.toW(qry, "crtTm", this.et, "lt");
+      this.query.toP(qry, this.pageNum, this.pageSize);
+      let param = this.query.toEncode(qry);
+      if (this.type == 2) {
+        data = await this.api.getAvailablePoints(param);
+      } else if (this.type == 1) {
+        data = await this.api.getAllPoints(param);
+      } else if (this.type == 3) {
+        data = await this.api.getPointsUsed(param);
+      } else if (this.type == 4) {
+        data = await this.api.getAboutToExpirePoints(param);
+      }
       if (data.code == 0) {
         this.loading = false;
-        this.total = data.data.total;
-        this.list = data.data.result;
-        this.list.forEach((item) => {
-          item.delieryTime = item.delieryTime
-            ? item.delieryTime.split(" ")[0]
-            : "";
-          item.crtTm = item.crtTm ? item.crtTm.split(" ")[0] : "";
-          if (item.isShortTime) {
-            item.agentName = `${item.agentName}(临时客户-${item.shortTimeName})`;
-          }
+        this.Score = data.sum;
+        this.total = data.page.total;
+        this.list1 = data.data.list;
+        this.list1.forEach((item) => {
+          item.crtTm = item.crtTm ? item.crtTm.substring(0, 10) : "";
+          item.updTm = item.updTm ? item.updTm.substring(0, 10) : "";
+          item.validTm = item.validTm ? item.validTm.substring(0, 10) : "";
         });
       }
     },
