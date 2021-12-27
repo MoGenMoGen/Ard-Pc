@@ -251,10 +251,12 @@
           @blur="checkXML(2)"
         ></textarea>
       </div>
-      <div class="integral">
-        <span style="margin-right:16px;">积分:</span>
-        <span class="blue" style="margin-right:40px;">网点积分：4900</span>
-        <span class="blue">经销商积分：9750</span>
+      <div class="integral" v-show="userInfo.userType == 2">
+        <span style="margin-right: 16px">积分:</span>
+        <span class="blue" style="margin-right: 40px"
+          >网点积分：{{ networkScore }}</span
+        >
+        <span class="blue">经销商积分：{{ agentScore }}</span>
       </div>
     </div>
     <div class="order-footer">
@@ -394,6 +396,8 @@ import AddNetwork from "../../../home/index/components/AddNetwork";
 export default {
   data() {
     return {
+      networkScore: "", //网点总积分
+      agentScore: "", //经销商总积分
       bhOrderList: [],
       loading: false,
       filtValue: {
@@ -518,6 +522,15 @@ export default {
       this.order.orderAreaCode = this.userInfo.regionCode;
       await this.getPersonalAddress();
       await this.getPersonalNetwork();
+    }
+    if (this.userInfo.userType == 2) {
+      let info1 = await this.api.getOneAllPoints({
+        agentId: this.userInfo.agentInfoId,
+      });
+      let info2 = await this.api.getOneAllNetworkPoints();
+
+      this.agentScore = info1.availablePoints; //经销商可用积分
+      this.networkScore = info2.availablePoints; //经销商可用积分
     }
     if (this.checkAddrId) {
       await this.getProxyAddressList();
@@ -655,7 +668,7 @@ export default {
       this.addNetworkVisible = false;
     },
     submit(form) {
-      console.log('新增地址',this.form);
+      console.log("新增地址", this.form);
       this.form = { ...form };
       let msg = this.reg.checkPhone(this.form.linkPhone);
       if (msg !== "ok") {

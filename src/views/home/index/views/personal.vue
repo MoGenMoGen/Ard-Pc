@@ -139,6 +139,7 @@ export default {
 
     let res = await this.api.getPersonalInformation();
     console.log("个人中心返回：");
+    console.log(1111111,res);
     this.mydata = res.data.userInfo;
     if (this.mydata.userType === 2) {
       this.showStatic = true;

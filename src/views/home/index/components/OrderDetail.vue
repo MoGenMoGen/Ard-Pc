@@ -163,19 +163,22 @@
         <span class="span9"></span>
         <span class="span9"></span>
       </div>
-      <div class="money_detail">
-          <div class="money_item">
-            <div class="left">商品合计：</div>
-            <div class="right">￥4000000</div>
+      <!-- 常规商品才有积分抵扣 -->
+      <div class="money_detail" v-show="info.orderType == 2 && !notShowTotal">
+        <div class="money_item">
+          <div class="left">商品合计：</div>
+          <div class="right">￥{{ info.totalAmount }}</div>
+        </div>
+        <div class="money_item">
+          <div class="left">积分抵扣：</div>
+          <div class="right">-￥{{ info.totalAmount * scoreDiscount }}</div>
+        </div>
+        <div class="money_item">
+          <div class="left">应付金额：</div>
+          <div class="right" style="color: #ff2a00">
+            ￥{{ (info.totalAmount * (1 - scoreDiscount)).toFixed(2) }}
           </div>
-          <div class="money_item">
-            <div class="left">积分抵扣：</div>
-            <div class="right">- 40</div>
-          </div>
-          <div class="money_item">
-            <div class="left">应付金额：</div>
-            <div class="right" style="color: #ff2a00">￥360</div>
-          </div>
+        </div>
       </div>
       <div class="title2">
         备注
@@ -218,9 +221,13 @@ export default {
       totalAmount: 0,
       ordertype: "1",
       checkList: [],
+      scoreDiscount: 0, //积分抵扣占比
     };
   },
   async mounted() {
+    let res = await this.api.getMaxRate();
+    this.scoreDiscount = Number(res.data) / 100;
+    console.log(this.scoreDiscount);
     await this.getInfo();
   },
   watch: {
@@ -482,8 +489,8 @@ export default {
 // 金额明细
 .money_detail {
   width: 100%;
-  padding-right: 473px;
-  border-bottom: 2px solid #E1E1E1;
+  padding-right: 464px;
+  border-bottom: 2px solid #e1e1e1;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;

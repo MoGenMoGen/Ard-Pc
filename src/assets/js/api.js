@@ -671,6 +671,14 @@ class api {
       });
     });
   }
+  //获取当前用户积分抵扣上限
+  getMaxRate(){
+    return new Promise((resolve, reject) => {
+      untilApi.get('/crm/pointsLog/apis/getMaxRate').then(res => {
+        resolve(res);
+      });
+    });
+  }
 }
 
 export { api };
