@@ -279,8 +279,10 @@ export default {
       // };
       let qry = this.query.new();
       this.query.toW(qry, "agentId", this.agentId, "EQ");
-      this.query.toW(qry, "crtTm", this.st, "gt");
-      this.query.toW(qry, "crtTm", this.et, "lt");
+      if (this.st && this.et) {
+        this.query.toW(qry, "crtTm", this.st, "gt");
+        this.query.toW(qry, "crtTm", this.et, "lt");
+      }
       this.query.toP(qry, this.pageNum, this.pageSize);
       let param = this.query.toEncode(qry);
       if (this.integralName == "可用积分") {

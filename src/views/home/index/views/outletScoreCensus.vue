@@ -122,7 +122,7 @@ export default {
       scoreNm: "",
       scoreVal: "",
       integralName: "",
-      pageNum: 1,  
+      pageNum: 1,
       pageSize: 10,
       total: 0,
       userInfo: {},
@@ -207,8 +207,8 @@ export default {
         pageNo: this.pageNum,
         pageSize: this.pageSize,
         userId: this.userInfo.userId,
-        name: this.networkNm,
       };
+      if (this.networkNm) this.param.name = this.networkNm;
       let data = await this.api.getNetWorkScoreList(this.param);
       if (data.code == 0) {
         this.loading = false;

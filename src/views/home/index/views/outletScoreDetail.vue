@@ -22,9 +22,9 @@
         >
       </p>
       <div class="info">
-        <p>联系人：{{ userInfo.linkMan  }}</p>
-        <p>联系电话：{{ userInfo.linkPhone  }}</p>
-        <p>收货地址：{{ userInfo.address  }}</p>
+        <p>联系人：{{ userInfo.linkMan }}</p>
+        <p>联系电话：{{ userInfo.linkPhone }}</p>
+        <p>收货地址：{{ userInfo.address }}</p>
       </div>
       <div class="select">
         <div class="available_score">{{ integralName }}：{{ Score }}</div>
@@ -229,8 +229,10 @@ export default {
       let data = "";
       let qry = this.query.new();
       this.query.toW(qry, "networkId", this.id, "EQ");
-      this.query.toW(qry, "crtTm", this.st, "gt");
-      this.query.toW(qry, "crtTm", this.et, "lt");
+      if (this.st && this.et) {
+        this.query.toW(qry, "crtTm", this.st, "gt");
+        this.query.toW(qry, "crtTm", this.et, "lt");
+      }
       this.query.toP(qry, this.pageNum, this.pageSize);
       let param = this.query.toEncode(qry);
       if (this.type == 2) {
