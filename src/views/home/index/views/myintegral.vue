@@ -279,6 +279,7 @@ export default {
       // };
       let qry = this.query.new();
       this.query.toW(qry, "agentId", this.agentId, "EQ");
+      this.query.toW(qry, "networkId", "", "IS");
       if (this.st && this.et) {
         this.query.toW(qry, "crtTm", this.st, "gt");
         this.query.toW(qry, "crtTm", this.et, "lt");
