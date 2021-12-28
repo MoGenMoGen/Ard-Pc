@@ -84,13 +84,13 @@
         </el-table-column>
         <el-table-column width="110" label="扣减积分">
           <template slot-scope="scope">
-            <p v-if="scope.row.points < 0">{{ scope.row.points }}</p>
+            <p v-if="scope.row.pointsLeft < 0">{{ scope.row.pointsLeft }}</p>
             <p v-else>-</p>
           </template></el-table-column
         >
         <el-table-column width="110" label="奖励积分">
           <template slot-scope="scope">
-            <p v-if="scope.row.points > 0">{{ scope.row.points }}</p>
+            <p v-if="scope.row.pointsLeft > 0">{{ scope.row.pointsLeft }}</p>
             <p v-else>-</p>
           </template></el-table-column
         >
