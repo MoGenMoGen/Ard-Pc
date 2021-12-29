@@ -171,12 +171,12 @@
         </div>
         <div class="money_item">
           <div class="left">积分抵扣：</div>
-          <div class="right">-￥{{ (info.totalAmount * scoreDiscount).toFixed(2) }}</div>
+          <div class="right">-￥{{ info.points.toFixed(2) }}</div>
         </div>
         <div class="money_item">
           <div class="left">应付金额：</div>
           <div class="right" style="color: #ff2a00">
-            ￥{{ (info.totalAmount * (1 - scoreDiscount)).toFixed(2) }}
+            ￥{{ ( info.totalAmount - info.points).toFixed(2) }}
           </div>
         </div>
       </div>
@@ -221,13 +221,13 @@ export default {
       totalAmount: 0,
       ordertype: "1",
       checkList: [],
-      scoreDiscount: 0, //积分抵扣占比
+      // scoreDiscount: 0, //积分抵扣占比
     };
   },
   async mounted() {
-    let res = await this.api.getMaxRate();
-    this.scoreDiscount = Number(res.data) / 100;
-    console.log(this.scoreDiscount);
+    // let res = await this.api.getMaxRate();
+    // this.scoreDiscount = Number(res.data) / 100;
+    // console.log(this.scoreDiscount);
     await this.getInfo();
   },
   watch: {
