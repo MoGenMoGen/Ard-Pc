@@ -254,10 +254,11 @@ export default {
           item.updTm = item.updTm ? item.updTm.substring(0, 10) : "";
           item.validTm = item.validTm ? item.validTm.substring(0, 10) : "";
           // 可用积分、即将到期积分，奖励/扣减积分字段改为pointsLeft
-          if(this.type==2||this.type==3){
+          if(this.type==2||this.type==4){
             this.$set(item,'points',item.pointsLeft)
           }
         });
+        console.log(1111111,this.list1);
       }
     },
   },

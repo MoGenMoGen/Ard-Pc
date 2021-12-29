@@ -279,12 +279,13 @@ export default {
       // };
       let qry = this.query.new();
       this.query.toW(qry, "agentId", this.agentId, "EQ");
-      this.query.toW(qry, "networkId", "", "IS");
+      this.query.toWNull(qry, "networkId");
       if (this.st && this.et) {
         this.query.toW(qry, "crtTm", this.st, "gt");
         this.query.toW(qry, "crtTm", this.et, "lt");
       }
       this.query.toP(qry, this.pageNum, this.pageSize);
+      // console.log(111111,qry);
       let param = this.query.toEncode(qry);
       if (this.integralName == "可用积分") {
         data = await this.api.getAvailablePoints(param);

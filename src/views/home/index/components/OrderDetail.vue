@@ -167,11 +167,11 @@
       <div class="money_detail" v-show="info.orderType == 2 && !notShowTotal">
         <div class="money_item">
           <div class="left">商品合计：</div>
-          <div class="right">￥{{ info.totalAmount }}</div>
+          <div class="right">￥{{ info.totalAmount.toFixed(2) }}</div>
         </div>
         <div class="money_item">
           <div class="left">积分抵扣：</div>
-          <div class="right">-￥{{ info.totalAmount * scoreDiscount }}</div>
+          <div class="right">-￥{{ (info.totalAmount * scoreDiscount).toFixed(2) }}</div>
         </div>
         <div class="money_item">
           <div class="left">应付金额：</div>
