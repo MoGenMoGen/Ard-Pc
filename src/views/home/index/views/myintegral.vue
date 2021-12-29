@@ -99,13 +99,13 @@
         </el-table-column>
         <el-table-column width="110" label="扣减积分">
           <template slot-scope="scope">
-            <p v-if="scope.row.pointsLeft < 0">{{ scope.row.pointsLeft }}</p>
+            <p v-if="scope.row.points < 0">{{ scope.row.points }}</p>
             <p v-else>-</p>
           </template></el-table-column
         >
         <el-table-column width="110" label="奖励积分">
           <template slot-scope="scope">
-            <p v-if="scope.row.pointsLeft > 0">{{ scope.row.pointsLeft }}</p>
+            <p v-if="scope.row.points > 0">{{ scope.row.points }}</p>
             <p v-else>-</p>
           </template></el-table-column
         >
@@ -303,6 +303,13 @@ export default {
           item.crtTm = item.crtTm ? item.crtTm.substring(0, 10) : "";
           item.updTm = item.updTm ? item.updTm.substring(0, 10) : "";
           item.validTm = item.validTm ? item.validTm.substring(0, 10) : "";
+          // 可用积分、即将到期积分，奖励/扣减积分字段改为pointsLeft
+          if (
+            (this.integralName =
+              "可用积分" || this.integralName == "即将到期积分")
+          ) {
+            this.$set(item, "points", item.pointsLeft);
+          }
         });
       }
     },
