@@ -205,6 +205,7 @@ export default {
   align-items: center;
   justify-content: space-around;
   .item_census {
+    width: 25%;
     padding: 34px 0 29px;
     box-sizing: border-box;
     display: flex;
