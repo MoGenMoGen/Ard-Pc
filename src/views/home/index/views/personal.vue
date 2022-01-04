@@ -86,7 +86,7 @@ export default {
       this.$router.push("./order");
     },
     myintegral: function () {
-      // this.$router.push(".");
+      this.$router.push("./integral");
     },
     myaddress: function () {
       this.$router.push("./myaddress");

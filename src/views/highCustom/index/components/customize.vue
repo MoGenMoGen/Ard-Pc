@@ -2,7 +2,7 @@
   <div class="customize">
     <el-table :data="tableData" max-height="550">
       <el-table-column type="index" label="项次" width="50"></el-table-column>
-      <el-table-column row-class-name="pro-no" label="产品编号" width="180">
+      <el-table-column row-class-name="pro-no" label="产品编号" width="200">
         <template slot-scope="scope">
           <div class="proNo">
             <el-select

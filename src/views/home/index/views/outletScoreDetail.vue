@@ -230,8 +230,8 @@ export default {
       let qry = this.query.new();
       this.query.toW(qry, "networkId", this.id, "EQ");
       if (this.st && this.et) {
-        this.query.toW(qry, "crtTm", this.st, "gt");
-        this.query.toW(qry, "crtTm", this.et, "lt");
+        this.query.toW(qry, "crtTm", this.st, "ge");
+        this.query.toW(qry, "crtTm", this.et, "le");
       }
       this.query.toP(qry, this.pageNum, this.pageSize);
       let param = this.query.toEncode(qry);

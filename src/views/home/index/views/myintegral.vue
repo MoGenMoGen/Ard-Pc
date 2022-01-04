@@ -281,8 +281,8 @@ export default {
       this.query.toW(qry, "agentId", this.agentId, "EQ");
       this.query.toWNull(qry, "networkId");
       if (this.st && this.et) {
-        this.query.toW(qry, "crtTm", this.st, "gt");
-        this.query.toW(qry, "crtTm", this.et, "lt");
+        this.query.toW(qry, "crtTm", this.st, "ge");
+        this.query.toW(qry, "crtTm", this.et, "le");
       }
       this.query.toP(qry, this.pageNum, this.pageSize);
       // console.log(111111,qry);
