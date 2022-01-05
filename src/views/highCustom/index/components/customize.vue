@@ -619,33 +619,33 @@ export default {
     },
     preStep() {
       console.log('上一步')
-      this.inputType = ''
+      // this.inputType = ''
       this.stepOne = true
       this.stepTwo = false;
       //根据选择的产品信息得到第一步的界面,统一退回到选择页面，并且属性都为空
-      this.product = {
-        productAttributes: [],
-        productAttributeCode: "",
-        productCatCode: "",
-        productCatName: "",
-        productFunCode: "",
-        productFunName: "",
-        productShapeCode: "",
-        productShapeName: "",
-        panelMaterialCode: "",
-        panelMaterialName: "",
-        productSku: "",
-        productName: "",
-        ilikeLogUrl: "",
-        orderNum: 1,
-        discount: "",
-        productUnitCode: "",
-        productUnitName: "",
-        shapeImgUrl: "",
-        shapeRemark: ""
-      };
-      this.form = {};
-      this.panelMaterialId = "";
+      // this.product = {
+      //   productAttributes: [],
+      //   productAttributeCode: "",
+      //   productCatCode: "",
+      //   productCatName: "",
+      //   productFunCode: "",
+      //   productFunName: "",
+      //   productShapeCode: "",
+      //   productShapeName: "",
+      //   panelMaterialCode: "",
+      //   panelMaterialName: "",
+      //   productSku: "",
+      //   productName: "",
+      //   ilikeLogUrl: "",
+      //   orderNum: 1,
+      //   discount: "",
+      //   productUnitCode: "",
+      //   productUnitName: "",
+      //   shapeImgUrl: "",
+      //   shapeRemark: ""
+      // };
+      // this.form = {};
+      // this.panelMaterialId = "";
       this.$nextTick(() => {
         if (this.showInput) {
           this.$refs.proNo.focus()
@@ -729,9 +729,9 @@ export default {
           this.$message("产品面板材质不能为空");
           return;
         }
-        console.log(this.proObj.code)
-        console.log(this.productNo)
-        console.log(this.proObj.code.substr(0, 6))
+        // console.log(this.proObj.code)
+        // console.log(this.productNo)
+        // console.log(this.proObj.code.substr(0, 6))
         // if (!this.proObj.code || this.productNo !== this.proObj.code.substr(0, 6)) {
         //   this.$message("当前网络较慢，商品未载入，请3秒后再点击下一步");
         //   return;
@@ -743,8 +743,7 @@ export default {
       this.modifyProduct = false;
       //新增
 
-      const proNo =
-      this.proObj.code || this.inputProNo || this.tableData[index].pro;
+      const proNo = this.proObj.code || this.inputProNo || this.tableData[index].pro;
       this.inputProNo = ""  //当对下完单的商品进行修改时，访问接口的参数为新添加的商品的sku编码，所以需要在这里将输入的编码清空
       this.stepArr = []
       this.propArr = [];
