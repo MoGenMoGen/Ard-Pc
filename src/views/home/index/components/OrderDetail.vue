@@ -156,7 +156,8 @@
         <span class="span7"></span>
 
         <span class="span7">{{ totalNum }}</span>
-        <span v-if="!notShowTotal" class="span8">{{ info.totalAmount }}</span>
+        <span v-if="!notShowTotal&&info.points" class="span8">￥{{ ( info.totalAmount + info.points).toFixed(2) }}</span>
+        <span v-else-if="!notShowTotal&&!info.points" class="span8">￥{{  info.totalAmount.toFixed(2) }}</span>
         <span class="span8" v-else></span>
         <span class="span9"></span>
         <span class="span9"></span>
@@ -167,16 +168,18 @@
       <div class="money_detail" v-show="info.orderType == 2 && !notShowTotal">
         <div class="money_item">
           <div class="left">商品合计：</div>
-          <div class="right">￥{{ info.totalAmount.toFixed(2) }}</div>
+          <div class="right" v-if="info.points">￥{{ ( info.totalAmount + info.points).toFixed(2) }}</div>
+          <div class="right" v-else>￥{{  info.totalAmount.toFixed(2) }}</div>
         </div>
         <div class="money_item">
           <div class="left">积分抵扣：</div>
-          <div class="right">-￥{{ info.points.toFixed(2) }}</div>
+          <div class="right" v-if="info.points">-￥{{ info.points.toFixed(2) }}</div>
+          <div class="right" v-else>-￥</div>
         </div>
         <div class="money_item">
           <div class="left">应付金额：</div>
           <div class="right" style="color: #ff2a00">
-            ￥{{ ( info.totalAmount - info.points).toFixed(2) }}
+            ￥{{  info.totalAmount.toFixed(2) }}
           </div>
         </div>
       </div>
@@ -489,7 +492,7 @@ export default {
 // 金额明细
 .money_detail {
   width: 100%;
-  padding-right: 464px;
+  padding-right: 438px;
   border-bottom: 2px solid #e1e1e1;
   box-sizing: border-box;
   display: flex;

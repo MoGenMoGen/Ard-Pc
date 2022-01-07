@@ -530,7 +530,7 @@ export default {
       let info2 = await this.api.getOneAllNetworkPoints();
 
       this.agentScore = info1.availablePoints; //经销商可用积分
-      this.networkScore = info2.availablePoints; //经销商可用积分
+      this.networkScore = info2.availablePoints; //网点可用积分
     }
     if (this.checkAddrId) {
       await this.getProxyAddressList();
