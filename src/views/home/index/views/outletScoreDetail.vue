@@ -234,6 +234,7 @@ export default {
         this.query.toW(qry, "crtTm", this.orderEndTime, "le");
       }
       this.query.toP(qry, this.pageNum, this.pageSize);
+      this.query.toO(qry, "crtTm",'desc')
       let param = this.query.toEncode(qry);
       if (this.type == 2) {
         data = await this.api.getAvailablePoints(param);

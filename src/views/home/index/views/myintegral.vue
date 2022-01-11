@@ -285,6 +285,7 @@ export default {
         this.query.toW(qry, "crtTm", this.et, "le");
       }
       this.query.toP(qry, this.pageNum, this.pageSize);
+      this.query.toO(qry, "crtTm",'desc')
       // console.log(111111,qry);
       let param = this.query.toEncode(qry);
       if (this.integralName == "可用积分") {

@@ -168,7 +168,7 @@ export default {
     this.$nextTick(()=>{
       console.log(this.$refs.echarts.offsetHeight)
       let height = this.$refs.echarts.offsetHeight - 80
-      this.$refs.money.setHeight(height)
+      this.$refs.money.setHeight(270)
       this.$refs.receipt.setHeight(height)
       this.$refs.product.setHeight(height+20)
       this.$refs.province.setHeight(height)
