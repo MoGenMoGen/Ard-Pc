@@ -73,12 +73,13 @@
         <el-table-column
           prop="srcNm"
           label="积分来源"
-          width="170"
+          width="110"
         ></el-table-column>
         <el-table-column
           prop="orderCode"
           label="订单编号"
-          width="140"
+          width="110"
+          show-overflow-tooltip="true"
         ></el-table-column>
         <el-table-column prop="crtTm" label="日期" width="130">
         </el-table-column>
@@ -94,13 +95,15 @@
             <p v-else>-</p>
           </template></el-table-column
         >
-        <el-table-column width="110" prop="a6" label="积分类型">
+        <el-table-column width="90" prop="a6" label="积分类型">
           <template slot-scope="scope">
             <p v-if="scope.row.network">专用积分</p>
             <p v-else>通用积分</p>
           </template></el-table-column
         >
         <el-table-column width="130" label="到期时间" prop="validTm">
+        </el-table-column>
+        <el-table-column width="110" label="备注" prop="rmks" show-overflow-tooltip="true">
         </el-table-column>
       </el-table>
     </div>

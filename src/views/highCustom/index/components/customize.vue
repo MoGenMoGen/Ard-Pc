@@ -20,14 +20,29 @@
                 :value="item.code"
               ></el-option>
             </el-select>
-            <div @click="toShowInput(scope.row, scope.$index)" v-else>{{ scope.row.pro }}</div>
-            <img @click="showDialog(scope.row, scope.$index,'add')" :src="category" alt/>
+            <div @click="toShowInput(scope.row, scope.$index)" v-else>
+              {{ scope.row.pro }}
+            </div>
+            <img
+              @click="showDialog(scope.row, scope.$index, 'add')"
+              :src="category"
+              alt
+            />
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="attribute" label="定制属性" width="200"></el-table-column>
+      <el-table-column
+        prop="attribute"
+        label="定制属性"
+        width="200"
+      ></el-table-column>
       <el-table-column prop="name" label="品名" width="150"></el-table-column>
-      <el-table-column prop="unit" label="单位" width="50" align="center"></el-table-column>
+      <el-table-column
+        prop="unit"
+        label="单位"
+        width="50"
+        align="center"
+      ></el-table-column>
       <el-table-column label="数量" width="80" align="center">
         <template slot-scope="scope">
           <input
@@ -38,38 +53,56 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="备注（安装位置/开或不开）" width="150" align="center">
+      <el-table-column
+        label="备注（安装位置/开或不开）"
+        width="150"
+        align="center"
+      >
         <template slot-scope="scope">
-          <textarea @blur="triggerTableData(scope.row,'installSite')" v-model="scope.row.installSite"></textarea>
+          <textarea
+            @blur="triggerTableData(scope.row, 'installSite')"
+            v-model="scope.row.installSite"
+          ></textarea>
         </template>
       </el-table-column>
       <el-table-column label="备注（项目名称）" width="150" align="center">
         <template slot-scope="scope">
-          <textarea @blur="triggerTableData(scope.row,'remark')" v-model="scope.row.remark"></textarea>
+          <textarea
+            @blur="triggerTableData(scope.row, 'remark')"
+            v-model="scope.row.remark"
+          ></textarea>
         </template>
       </el-table-column>
       <el-table-column label="备注（其它产品信息）" width="150" align="center">
         <template slot-scope="scope">
-          <textarea @blur="triggerTableData(scope.row,'remarkProduct')" v-model="scope.row.remarkProduct"></textarea>
+          <textarea
+            @blur="triggerTableData(scope.row, 'remarkProduct')"
+            v-model="scope.row.remarkProduct"
+          ></textarea>
         </template>
       </el-table-column>
 
       <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row,scope.$index)" type="text" size="small">增加</el-button>
+          <el-button
+            @click="handleClick(scope.row, scope.$index)"
+            type="text"
+            size="small"
+            >增加</el-button
+          >
           <el-button
             v-if="tableData[scope.$index].pro"
             @click="modify(scope.row, scope.$index)"
             type="text"
             size="small"
-          >修改
+            >修改
           </el-button>
           <el-button
             @click="delet(scope.row, scope.$index)"
             type="text"
             size="small"
             v-show="tableData.length > 1"
-          >删除
+            >删除
           </el-button>
         </template>
       </el-table-column>
@@ -82,7 +115,11 @@
         <button @click="addCart">加入购物车</button>
       </div>
     </div>
-    <el-dialog :visible.sync="dialogShow" @close="closeDialog" :close-on-click-modal="false">
+    <el-dialog
+      :visible.sync="dialogShow"
+      @close="closeDialog"
+      :close-on-click-modal="false"
+    >
       <!-- tab切换 -->
       <div class="tablist">
         <div :class="{ active: stepOne === true }">1 / 产品编号</div>
@@ -120,9 +157,14 @@
             <div class="selector">
               <div>
                 <span>系列：</span>
-                <el-select @focus="getBlur('input')"
-                           ref="proNoTwo"
-                           v-model="val" placeholder="请选择" value-key="id" @change="changePro">
+                <el-select
+                  @focus="getBlur('input')"
+                  ref="proNoTwo"
+                  v-model="val"
+                  placeholder="请选择"
+                  value-key="id"
+                  @change="changePro"
+                >
                   <el-option
                     v-for="item in proList"
                     :key="item.id"
@@ -133,8 +175,12 @@
               </div>
               <div>
                 <span>功能：</span>
-                <el-select v-model="product.productFunCode" @focus="getBlur('input')" placeholder="请选择"
-                           @change="changeFunc">
+                <el-select
+                  v-model="product.productFunCode"
+                  @focus="getBlur('input')"
+                  placeholder="请选择"
+                  @change="changeFunc"
+                >
                   <el-option
                     v-for="item in funList"
                     :key="item.id"
@@ -162,7 +208,12 @@
               </div>
               <div>
                 <span>面板材质：</span>
-                <el-select v-model="panelMaterialId" @focus="getBlur('input')" placeholder="请选择" @change="getPanel">
+                <el-select
+                  v-model="panelMaterialId"
+                  @focus="getBlur('input')"
+                  placeholder="请选择"
+                  @change="getPanel"
+                >
                   <el-option
                     v-for="item in panelMaterialList"
                     :key="item.id"
@@ -184,7 +235,7 @@
               <div class="product-detail">
                 <div>产品图片</div>
                 <div>
-                  <img :src="product.ilikeLogUrl" alt/>
+                  <img :src="product.ilikeLogUrl" alt />
                 </div>
               </div>
             </div>
@@ -208,32 +259,61 @@
               <sup>2</sup>)跟属性为必填
             </p>
           </div>
-          <img :src="caseImgUrl" @click="showCaseImg = true" alt/>
+          <img :src="caseImgUrl" @click="showCaseImg = true" alt />
         </div>
 
         <!-- 固定高度 -->
         <div class="table-size">
           <div class="product-info">
-            <div class="parent-wrap" v-for="(itemProp, index) in stepArr" :key="index">
+            <div
+              class="parent-wrap"
+              v-for="(itemProp, index) in stepArr"
+              :key="index"
+            >
               <div v-for="(item, index) in itemProp.children" :key="index">
-                <div v-if=" item.type === 1">{{ itemProp.name + "-" + item.name }}</div>
+                <div v-if="item.type === 1">
+                  {{ itemProp.name + "-" + item.name }}
+                </div>
                 <div v-else>
-                  <span v-if="itemProp.children.length > 1">{{ itemProp.name + "-" + item.name }}</span>
+                  <span v-if="itemProp.children.length > 1">{{
+                    itemProp.name + "-" + item.name
+                  }}</span>
                   <span v-else>{{ item.name }}</span>
                 </div>
 
                 <div v-if="item.type === 1">
-                  <input v-if="index==0" ref="proNext" v-focus @focus="getBlur('input')" type="number" min="0"
-                         v-model="form[`${item.code}`]"/>
-                  <input v-else type="number" min="0" @focus="getBlur('input')" v-model="form[`${item.code}`]"/>
+                  <input
+                    v-if="index == 0"
+                    ref="proNext"
+                    v-focus
+                    @focus="getBlur('input')"
+                    type="number"
+                    min="0"
+                    v-model="form[`${item.code}`]"
+                  />
+                  <input
+                    v-else
+                    type="number"
+                    min="0"
+                    @focus="getBlur('input')"
+                    v-model="form[`${item.code}`]"
+                  />
                 </div>
                 <!-- 需要动态绑定每个选项的值 -->
-                <el-select v-model="form[`${item.code}`]" ref="proNext" @focus="getBlur('input')" v-else nm="noConfirm"
-                           placeholder="请选择" filterable default-first-option>
+                <el-select
+                  v-model="form[`${item.code}`]"
+                  ref="proNext"
+                  @focus="getBlur('input')"
+                  v-else
+                  nm="noConfirm"
+                  placeholder="请选择"
+                  filterable
+                  default-first-option
+                >
                   <el-option
                     v-for="itemChild in item.attribueValueList"
                     :key="itemChild.id"
-                    :label="itemChild.code+':'+itemChild.name"
+                    :label="itemChild.code + ':' + itemChild.name"
                     :value="
                       itemChild.code + '_' + itemChild.name + '_' + itemChild.id
                     "
@@ -258,7 +338,9 @@
             :on-remove="handlePictureCardRemove"
             accept=".dwg, .jpg, .jpeg, .png, .pdf, .bmp"
           >
-            <el-button size="medium" type="warning" @focus="getBlur('input')">点击上传</el-button>
+            <el-button size="medium" type="warning" @focus="getBlur('input')"
+              >点击上传</el-button
+            >
           </el-upload>
           <!-- <el-dialog :visible.sync="dialogVisible" append-to-body>
             <img width="auto" height="auto" :src="dialogImageUrl" alt />
@@ -266,22 +348,56 @@
         </div>
       </div>
       <!-- footer -->
-      <div slot="footer" class="operate-footer" :class="{ 'center-btn': showInput === true }">
+      <div
+        slot="footer"
+        class="operate-footer"
+        :class="{ 'center-btn': showInput === true }"
+      >
         <div class="btn" v-if="stepOne === true && !stepTwo">
-          <button @click="cancel" @focus="getBlur('cancel')" :class="{blur:inputType=='cancel'}">取消</button>
-          <button @click="nextStep" @focus="getBlur('next')" :class="{blur:inputType=='next'}">下一步</button>
+          <button
+            @click="cancel"
+            @focus="getBlur('cancel')"
+            :class="{ blur: inputType == 'cancel' }"
+          >
+            取消
+          </button>
+          <button
+            @click="nextStep"
+            @focus="getBlur('next')"
+            :class="{ blur: inputType == 'next' }"
+          >
+            下一步
+          </button>
         </div>
         <div class="btn-two" v-if="stepTwo === true">
           <div class="second-btn">
-            <button @click="preStep" @focus="getBlur('pre')" :class="{blur:inputType=='pre'}">上一步</button>
-            <button @click="cancel" @focus="getBlur('cancel')" :class="{blur:inputType=='cancel'}">取消</button>
-            <button @click="confirmProp" @focus="getBlur('confirm')" :class="{blur:inputType=='confirm'}">确认</button>
+            <button
+              @click="preStep"
+              @focus="getBlur('pre')"
+              :class="{ blur: inputType == 'pre' }"
+            >
+              上一步
+            </button>
+            <button
+              @click="cancel"
+              @focus="getBlur('cancel')"
+              :class="{ blur: inputType == 'cancel' }"
+            >
+              取消
+            </button>
+            <button
+              @click="confirmProp"
+              @focus="getBlur('confirm')"
+              :class="{ blur: inputType == 'confirm' }"
+            >
+              确认
+            </button>
           </div>
         </div>
       </div>
     </el-dialog>
     <el-dialog class="case-img" :visible.sync="showCaseImg">
-      <img :src="caseImgUrl" alt/>
+      <img :src="caseImgUrl" alt />
     </el-dialog>
     <!-- 加入购物车的时候选择批次 -->
     <pick-batch
@@ -301,7 +417,7 @@ export default {
   data() {
     return {
       val: {},
-      inputType: '',
+      inputType: "",
       category,
       ilikeLog,
       dialogShow: false,
@@ -336,7 +452,7 @@ export default {
         productUnitName: "",
         shapeImgUrl: "",
         shapeRemark: "",
-        code:''
+        code: "",
       },
       tableData: [
         {
@@ -348,8 +464,8 @@ export default {
           count: 1, //以下字段提供修改
           product: {}, //第一步
           form: {},
-          fileList: [] //第二部
-        }
+          fileList: [], //第二部
+        },
       ],
       tableObj: {
         // no: "",
@@ -363,11 +479,11 @@ export default {
         remark: "",
         remarkProduct: "",
         product: {}, //第一步
-        form: {} //第二步
+        form: {}, //第二步
       },
       stepArr: [],
       proObj: {
-        attributeNm: ""
+        attributeNm: "",
       },
       proList: [],
       funList: [],
@@ -393,9 +509,9 @@ export default {
   directives: {
     focus: {
       inserted: function (el) {
-        el.focus()
-      }
-    }
+        el.focus();
+      },
+    },
   },
   watch: {
     // "product.productFunCode"(val) {
@@ -407,7 +523,7 @@ export default {
       if (val) {
         this.getPanel(this.panelMaterialId);
       }
-    }
+    },
   },
   computed: {
     length() {
@@ -417,20 +533,20 @@ export default {
       return this.cartList.length;
     },
     productNo() {
-     // return `1${this.val.code}${this.product.productFunCode}${this.product.productShapeCode}${this.product.panelMaterialCode}`;
+      // return `1${this.val.code}${this.product.productFunCode}${this.product.productShapeCode}${this.product.panelMaterialCode}`;
       return `1${this.product.code}${this.product.productFunCode}${this.product.productShapeCode}${this.product.panelMaterialCode}`;
     },
     productWidth() {
       let length = 0;
-      this.stepArr.map(item => {
+      this.stepArr.map((item) => {
         length += item.children.length;
       });
       let height = 41 * length;
       return width > 912 ? width : "100%";
-    }
+    },
   },
   components: {
-    PickBatch
+    PickBatch,
   },
   async mounted() {
     this.enterKeyup();
@@ -438,7 +554,7 @@ export default {
       this.$confirm("您还没有登录，立即登录？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "再看看",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           this.until.href("../home/login.html");
@@ -464,41 +580,46 @@ export default {
       //立即下单折扣
       let userObj = JSON.parse(this.userInfo);
       this.product.discount = userObj.discount ? userObj.discount : 1;
-      this.getForbidden()
+      this.getForbidden();
     }
   },
   methods: {
-
     //获取禁止符号
     async getForbidden() {
-      this.forbidden = await this.api.getBaseDictionaryList("XmlCanTUnderstandString");
+      this.forbidden = await this.api.getBaseDictionaryList(
+        "XmlCanTUnderstandString"
+      );
     },
     //焦点状态
     getBlur(type) {
       // console.log('焦点状态:'+type)
-      this.inputType = type
+      this.inputType = type;
     },
     triggerTableData(item, val) {
       if (item[val]) {
-        let index = this.forbidden.findIndex(v => {
-          return item[val].indexOf(v.nm) > -1
-        })
+        let index = this.forbidden.findIndex((v) => {
+          return item[val].indexOf(v.nm) > -1;
+        });
         if (index > -1) {
-          let text = []
-          this.forbidden.forEach(v => {
-            text.push(v.nm)
-          })
-          this.$alert(text.join(',') + '输入框中含有这些禁止符号，请去掉所有禁止符号', '', {
-            confirmButtonText: '确定',
-            callback: () => {
-              this.forbidden.forEach(v => {
-                if (item[val].indexOf(v.nm) > -1) {
-                  item[val] = item[val].replace(RegExp(v.nm, "g"), '')
-                  // console.log(item[val])
-                }
-              })
-            }
+          let text = [];
+          this.forbidden.forEach((v) => {
+            text.push(v.nm);
           });
+          this.$alert(
+            text.join(",") + "输入框中含有这些禁止符号，请去掉所有禁止符号",
+            "",
+            {
+              confirmButtonText: "确定",
+              callback: () => {
+                this.forbidden.forEach((v) => {
+                  if (item[val].indexOf(v.nm) > -1) {
+                    item[val] = item[val].replace(RegExp(v.nm, "g"), "");
+                    // console.log(item[val])
+                  }
+                });
+              },
+            }
+          );
         }
       }
 
@@ -521,7 +642,7 @@ export default {
     },
     //类型选择面板
     showDialog(row, index, type) {
-      console.log(111111111111)
+      console.log(111111111111);
 
       return new Promise((resolve, reject) => {
         this.selectRow = index;
@@ -557,13 +678,13 @@ export default {
             );
           }
           let filter = this.tableData.filter((item, i) => i === index);
-          this.form = {...filter[0].form};
-          this.product = {...filter[0].product};
+          this.form = { ...filter[0].form };
+          this.product = { ...filter[0].product };
           this.fileList = filter[0].fileList;
         }
         this.$nextTick(() => {
           // this.$refs.proNoTwo.focus()
-        })
+        });
 
         resolve(this.product);
       });
@@ -605,7 +726,9 @@ export default {
     },
     closeDialog() {
       this.dialogShow = false;
+      this.product.productCatCode = "";
       this.proObj = {};
+      this.val = {};
       this.stepArr = [];
     },
     //跳转到详情页面
@@ -613,14 +736,14 @@ export default {
       this.$router.push({
         path: "/industryDetail",
         query: {
-          ipPk: ipPk
-        }
+          ipPk: ipPk,
+        },
       });
     },
     preStep() {
-      console.log('上一步')
+      console.log("上一步");
       // this.inputType = ''
-      this.stepOne = true
+      this.stepOne = true;
       this.stepTwo = false;
       //根据选择的产品信息得到第一步的界面,统一退回到选择页面，并且属性都为空
       // this.product = {
@@ -648,29 +771,29 @@ export default {
       // this.panelMaterialId = "";
       this.$nextTick(() => {
         if (this.showInput) {
-          this.$refs.proNo.focus()
+          this.$refs.proNo.focus();
         } else {
-          this.$refs.proNoTwo.focus()
+          this.$refs.proNoTwo.focus();
         }
-      })
-
+      });
     },
     cancel() {
-      this.inputType = ''
+      this.inputType = "";
       this.dialogShow = false;
       this.product.shapeRemark = "";
       this.product.shapeImgUrl = "";
+      this.val = {};
       this.proObj = {};
-      //this.proList = [];
+      //  this.proList = [];
       this.funList = [];
       this.shapeList = [];
       this.panelMaterialList = [];
     },
     handleExceed(files, fileList) {
       this.$message.warning(
-        `当前限制选择 1 个文件，本次选择了 ${
-          files.length
-        } 个文件，共选择了 ${files.length + fileList.length} 个文件`
+        `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${
+          files.length + fileList.length
+        } 个文件`
       );
     },
 
@@ -695,7 +818,7 @@ export default {
         : item.name;
       this.fileList.push({
         name: item.file.name,
-        url
+        url,
       });
     },
     async nextStep(index = 0) {
@@ -737,28 +860,31 @@ export default {
         //   return;
         // }
       }
-      this.inputType = ''
-      this.stepTwo = false
+      this.inputType = "";
+      this.stepTwo = false;
       this.stepTwo = true;
       this.modifyProduct = false;
       //新增
 
-      const proNo = this.proObj.code || this.inputProNo || this.tableData[index].pro;
-      this.inputProNo = ""  //当对下完单的商品进行修改时，访问接口的参数为新添加的商品的sku编码，所以需要在这里将输入的编码清空
-      this.stepArr = []
+      const proNo =
+        this.proObj.code || this.inputProNo || this.tableData[index].pro;
+      this.inputProNo = ""; //当对下完单的商品进行修改时，访问接口的参数为新添加的商品的sku编码，所以需要在这里将输入的编码清空
+      this.stepArr = [];
       this.propArr = [];
       this.stepArr = await this.api.getProductAttributeByProNo(proNo);
       var sortList = await this.api.getProductAttributeByProNoSort(proNo);
       var tempList = [];
-      this.stepArr.map(item => {
-        item.children.map(itemChild => {
+      this.stepArr.map((item) => {
+        item.children.map((itemChild) => {
           tempList.push(itemChild);
         });
       });
-      sortList.map(item => {
-        let tempFindItem = tempList.find(tempItem => item.attributeCode === tempItem.code)
-        this.propArr.push(tempFindItem)
-      })
+      sortList.map((item) => {
+        let tempFindItem = tempList.find(
+          (tempItem) => item.attributeCode === tempItem.code
+        );
+        this.propArr.push(tempFindItem);
+      });
       //如果是修改
       if (this.tableData[index] && this.tableData[index].pro) {
         this.form = JSON.parse(
@@ -773,8 +899,8 @@ export default {
       }
       //2019年11月26日 dyp 去除根据相等的产品编码判断，只要存在'C01,C02,M01’这种编码统统带出来
       this.$nextTick(() => {
-        this.$refs.proNext[0].focus()
-      })
+        this.$refs.proNext[0].focus();
+      });
     },
     //根据编码获取产品名称
     async remoteMethod() {
@@ -793,7 +919,6 @@ export default {
       this.showInput = true;
       this.dialogType = 0;
 
-
       this.showFirstStep = true;
       let data = {};
       for (let [k, v] of Object.entries(this.product)) {
@@ -811,15 +936,14 @@ export default {
       this.form = {};
       this.fileList = [];
 
-      let info = this.writeProList.find(item => item.code == this.inputProNo);
+      let info = this.writeProList.find((item) => item.code == this.inputProNo);
       this.product.productSku = info.code;
       this.product.productName = info.name;
       this.caseImgUrl = info.caseImgUrl;
       this.proObj = info;
       // console.log('===============')
       // console.log(info)
-      this.nextStep(index)
-
+      this.nextStep(index);
     },
     //回车
     enterKey(event) {
@@ -864,19 +988,20 @@ export default {
       this.tableData.push(JSON.parse(JSON.stringify(this.tableObj)));
       if (this.tableData.length > 1) {
         //this.tableData[this.tableData.length-1].installSite = this.tableData[index].installSite
-        this.tableData[this.tableData.length - 1].remark = this.tableData[index].remark
+        this.tableData[this.tableData.length - 1].remark =
+          this.tableData[index].remark;
         //this.tableData[this.tableData.length-1].remarkProduct = this.tableData[index].remarkProduct
       }
-      console.group()
+      console.group();
       // console.log('增加信息')
       // console.log(this.tableData)
-      console.groupEnd()
+      console.groupEnd();
     },
     delet(row, index) {
       this.$confirm("此操作将删除该产品, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           if (this.tableData.length > 1) {
@@ -889,7 +1014,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -907,14 +1032,16 @@ export default {
     },
 
     async changePro(val) {
+      // console.log('val22',this.val);
       this.product.productCatCode = val.id;
       this.product.code = val.code;
       //let e = val.id
       this.funList = await this.api.getProFunctionList({
-        catId: val.id
+        catId: val.id,
       });
 
-      let arr = this.proList.filter(item => item.id === val.id);
+      let arr = this.proList.filter((item) => item.id === val.id);
+      // console.log(12434,arr);
       this.product.productCatName = arr[0].name;
       this.shapeList = [];
       this.panelMaterialList = [];
@@ -924,13 +1051,13 @@ export default {
       this.changeFunc(this.product.productFunCode);
     },
     async changeFunc(e) {
-      console.log(e)
+      console.log(e);
 
-      let arr = this.funList.filter(item => item.code === e);
+      let arr = this.funList.filter((item) => item.code === e);
       this.product.productFunName = arr[0].name;
       let param = {
         catId: this.product.productCatCode,
-        funId: this.product.productFunCode
+        funId: this.product.productFunCode,
       };
       this.shapeList = await this.api.getProShapeList(param);
 
@@ -938,12 +1065,12 @@ export default {
       this.changeShape(this.product.productShapeCode);
     },
     async changeShape(e) {
-      let arr = this.shapeList.filter(item => item.code === e);
+      let arr = this.shapeList.filter((item) => item.code === e);
       this.product.productShapeName = arr[0].name;
 
       let code = `1${this.val.code}${this.product.productFunCode}${e}`;
       this.panelMaterialList = await this.api.getProPanelMaterialList({
-        code
+        code,
       });
 
       if (this.panelMaterialList) {
@@ -959,21 +1086,17 @@ export default {
       this.until.loSave("tableData", JSON.stringify(this.tableData));
     },
     async getPanel(e) {
-
       if (e) {
-        const index = this.panelMaterialList.findIndex(item => item.id === e);
-        this.product.panelMaterialCode = this.panelMaterialList[
-          index
-          ].materialCode;
-        this.product.panelMaterialName = this.panelMaterialList[
-          index
-          ].materialName;
+        const index = this.panelMaterialList.findIndex((item) => item.id === e);
+        this.product.panelMaterialCode =
+          this.panelMaterialList[index].materialCode;
+        this.product.panelMaterialName =
+          this.panelMaterialList[index].materialName;
         this.panelMaterialId = this.panelMaterialList[index].id;
       }
 
       //this.productNo = '1161110'
       // if (this.productNo.length === 6 || this.productNo.length === 7) {
-
 
       this.proObj = await this.api.getProductByMaterial(this.productNo);
       if (this.proObj) {
@@ -989,7 +1112,7 @@ export default {
     },
     async confirmProp() {
       //处理表单数据
-      console.log('确定')
+      console.log("确定");
       this.proObj.attributeNm = "";
       this.product.productAttributeCode = "";
       this.product.productAttributes = [];
@@ -1083,7 +1206,7 @@ export default {
       this.product.buyNum = 1;
 
       let productAttr = "";
-      this.product.productAttributes.forEach(item => {
+      this.product.productAttributes.forEach((item) => {
         productAttr += `${item.attributeValueName} `;
       });
       this.product.productAttr = productAttr;
@@ -1098,7 +1221,7 @@ export default {
       this.until.loSave("tableData", JSON.stringify(this.tableData));
       this.until.loSave("cartList", JSON.stringify(this.cartList));
       this.dialogShow = false;
-      this.inputType = ''
+      this.inputType = "";
     },
     addCart() {
       this.cartBatchVisible = true;
@@ -1113,7 +1236,7 @@ export default {
       }
       let userInfo = JSON.parse(this.until.loGet("userInfo"));
 
-      const {cartCatId, cartCatRemark} = {...batch};
+      const { cartCatId, cartCatRemark } = { ...batch };
       this.cartList.map((item, index) => {
         item.buyId = userInfo.userId;
         item.buyName = userInfo.realName;
@@ -1129,12 +1252,12 @@ export default {
       });
 
       this.api
-        .postSysBatchAddCart({jsonData: JSON.stringify(this.cartList)})
-        .then(res => {
+        .postSysBatchAddCart({ jsonData: JSON.stringify(this.cartList) })
+        .then((res) => {
           if (res.code === 0) {
             this.$message({
               message: "加入购物车成功",
-              type: "success"
+              type: "success",
             });
             //把添加成功的产品在当前购物车清空，同样需要把页面清空
             this.cartBatchVisible = false;
@@ -1142,13 +1265,17 @@ export default {
             this.tableData = [];
             this.until.loRemove("tableData");
             this.until.loRemove("cartList");
-            this.tableData.splice(0, this.length, JSON.parse(JSON.stringify(this.tableObj)));
+            this.tableData.splice(
+              0,
+              this.length,
+              JSON.parse(JSON.stringify(this.tableObj))
+            );
             //
             const qry = new this.Query();
             qry.buildPageClause(1, 10);
 
             const param = qry.getParam();
-            this.api.getCartBatchListByPage(param).then(r => {
+            this.api.getCartBatchListByPage(param).then((r) => {
               if (r.code == 0) {
                 this.store.commit("setCartNum", r.data.total);
               }
@@ -1166,12 +1293,12 @@ export default {
         item.remark = this.tableData[index].remark;
         item.installSite = this.tableData[index].installSite;
         item.remarkProduct = this.tableData[index].remarkProduct;
-        item.buyNum = this.tableData[index].count
+        item.buyNum = this.tableData[index].count;
       });
       this.until.loSave("cartList", JSON.stringify(this.cartList));
       this.until.loRemove("tableData");
       this.$router.push("./order");
-    }
+    },
   },
   destroyed() {
     // 销毁enter事件
@@ -1242,7 +1369,6 @@ export default {
             input {
               flex: 1;
               text-align: left;
-
             }
           }
 
