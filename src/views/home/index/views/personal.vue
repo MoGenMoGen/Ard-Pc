@@ -109,9 +109,11 @@ export default {
       let sum2 = 0;
       let sum3 = 0;
       let data = await this.api.getMyCenter();
+      console.log(111,data);
       sum1 = data.reduce((sum, item) => sum + Number(item[1]), 0);
       sum2 = data.reduce((sum, item) => sum + Number(item[2]), 0);
       sum3 = data.reduce((sum, item) => sum + Number(item[3]), 0);
+      console.log(222,data);
       let str1 = "product";
       let str2 = `累计订单总额：${sum1}元`;
       let str3 = `本年度订单总额：${sum2}元`;
@@ -120,7 +122,7 @@ export default {
       arr.push(str1, str2, str3, str4);
       console.log(arr);
       let source = [arr, ...data];
-      console.log(source);
+      console.log(333,source);
       this.$refs.orderReport.getData(source);
     },
   },
