@@ -798,13 +798,19 @@ export default {
 
         // console.log(12345, this.selectPro.productAttributeList);
         this.selectPro.productAttributeList.map((item) => {
-          if (item.attributeValueCode)
-          {
-            this.form[item.attributeKeyCode] =
-              item.attributeValueCode + "-" + item.attributeValueName;
-          }
-          else
-          this.form[item.attributeKeyCode] = item.attributeValueName;
+          console.log(11111111, this.form[item.attributeKeyCode]);
+          if (item.attributeValueCode) {
+            if (
+              this.form[item.attributeKeyCode] &&
+              this.form[item.attributeKeyCode].filter("-")[0] ==
+                item.attributeValueCode
+            ) {
+              this.form[item.attributeKeyCode] = item.attributeValueName;
+            } else {
+              this.form[item.attributeKeyCode] =
+                item.attributeValueCode + "-" + item.attributeValueName;
+            }
+          } else this.form[item.attributeKeyCode] = item.attributeValueName;
         });
       } else {
         this.editOrderVisible2 = true;
@@ -1069,6 +1075,9 @@ export default {
         let name = this.form[item.attributeKeyCode];
         if (name && name.indexOf("_") > 0) {
           name = name.split("_")[1];
+        }
+        if (name && name.indexOf("-") > 0) {
+          name = name.split("-")[1];
         }
         item.attributeValueName = name;
         filter[0].productAttributeCode += `#${item.attributeKeyCode}#|${item.attributeValueName}|`;

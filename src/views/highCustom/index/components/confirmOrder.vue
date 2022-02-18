@@ -396,8 +396,9 @@ import AddNetwork from "../../../home/index/components/AddNetwork";
 export default {
   data() {
     return {
-      networkScore: "", //网点总积分
+      networkScore: "", //网点积分
       agentScore: "", //经销商总积分
+      netList: [], //网点信息列表
       bhOrderList: [],
       loading: false,
       filtValue: {
@@ -527,10 +528,16 @@ export default {
       let info1 = await this.api.getOneAllPoints({
         agentId: this.userInfo.agentInfoId,
       });
-      let info2 = await this.api.getOneAllNetworkPoints();
+      let info2 = await this.api.getNetWorkScoreList({
+        pageNo: 1,
+        pageSize: 100,
+        userId: this.userInfo.userId,
+        name: "",
+      });
 
       this.agentScore = info1.availablePoints; //经销商可用积分
-      this.networkScore = info2.availablePoints; //网点可用积分
+      this.netList = info2.data.records; //网点列表信息
+      // console.log("ffff", this.netList);
     }
     if (this.checkAddrId) {
       await this.getProxyAddressList();
@@ -944,6 +951,11 @@ export default {
         if (this.checkAddrId) {
           this.getProxyAddressList();
         }
+        this.netList.forEach((item) => {
+          if (item.networkId == this.networkId) {
+            this.networkScore = item.availablePoints; //网点可用积分
+          }
+        });
       } else {
         this.order.networkId = "";
         this.order.networkName = "";
