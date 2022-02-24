@@ -796,14 +796,16 @@ export default {
             }
           });
 
-        // console.log(12345, this.selectPro.productAttributeList);
         this.selectPro.productAttributeList.map((item) => {
           console.log(11111111, this.form[item.attributeKeyCode]);
           if (item.attributeValueCode) {
+			  console.log(12345, this.form,item.attributeKeyCode);
             if (
               this.form[item.attributeKeyCode] &&
-              this.form[item.attributeKeyCode].filter("-")[0] ==
-                item.attributeValueCode
+              // this.form[item.attributeKeyCode].filter("-")[0] ==
+              //   item.attributeValueCode
+				this.form[item.attributeKeyCode] ==
+				  item.attributeValueCode
             ) {
               this.form[item.attributeKeyCode] = item.attributeValueName;
             } else {
@@ -952,6 +954,7 @@ export default {
 
       for (let index = 0; index < this.idList.length; index++) {
         if (this.idList[index].key.indexOf("C") == -1) {
+			console.log(78979,this.idList);
           let name = this.idList[index].value;
           if (!name) {
             this.$message.error("您还没有填写完产品属性,不能确定！");
