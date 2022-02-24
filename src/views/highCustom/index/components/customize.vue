@@ -304,6 +304,7 @@
                   v-model="form[`${item.code}`]"
                   ref="proNext"
                   @focus="getBlur('input')"
+                  
                   v-else
                   nm="noConfirm"
                   placeholder="请选择"
@@ -642,7 +643,7 @@ export default {
     },
     //类型选择面板
     showDialog(row, index, type) {
-      console.log(111111111111);
+      // console.log(111111111111);
 
       return new Promise((resolve, reject) => {
         this.selectRow = index;
@@ -867,7 +868,9 @@ export default {
       //新增
 
       const proNo =
-        this.proObj.code || this.inputProNo || this.tableData[index].pro;
+        this.proObj.code ||
+        this.inputProNo ||
+        this.tableData[this.selectRow].pro;
       this.inputProNo = ""; //当对下完单的商品进行修改时，访问接口的参数为新添加的商品的sku编码，所以需要在这里将输入的编码清空
       this.stepArr = [];
       this.propArr = [];
@@ -885,18 +888,50 @@ export default {
         );
         this.propArr.push(tempFindItem);
       });
-      //如果是修改
-      if (this.tableData[index] && this.tableData[index].pro) {
-        this.form = JSON.parse(
-          JSON.stringify(this.tableData[this.selectRow].form)
-        );
-      } else {
-        if (this.length > 1) {
-          this.form = JSON.parse(
-            JSON.stringify(this.tableData[this.length - 2].form)
-          );
-        }
-      }
+
+      this.form =this.tableData[this.selectRow].form;
+      //  JSON.parse(
+      //   JSON.stringify(this.tableData[this.selectRow].form)
+      // );
+      console.log(111,this.form);
+      //名称中带有材质的默认选中第一项
+      this.stepArr.forEach((itemProp) => {
+        itemProp.children.forEach((item) => {
+          if (item.type == 1) {
+          } else {
+            item.attribueValueList.forEach((itemChild, indexChild) => {
+              if (
+                itemProp.name.indexOf("材质") > -1 ||
+                item.name.indexOf("材质") > -1
+              ) {
+                if (indexChild==0&&!this.form[`${item.code}`]) {
+                  console.log(itemChild.code);
+                 this.$set(this.form,`${item.code}`,itemChild.code + '_' + itemChild.name + '_' + itemChild.id)
+                }
+              }
+            });
+          }
+        });
+      });
+     //如果是修改
+      // if (this.tableData[index] && this.tableData[index].pro) {
+      //   console.log(1111111111);
+      //   this.form = JSON.parse(
+      //     JSON.stringify(this.tableData[this.selectRow].form)
+      //   );
+      // } else {
+      //   console.log(22222222222);
+      //   console.log(this.selectRow);
+      //   console.log('111',index,'333');
+      //   console.log(this.tableData);
+      //   // if (this.length > 1) {
+      //   this.form = JSON.parse(
+      //     // JSON.stringify(this.tableData[this.length - 2].form)
+      //     JSON.stringify(this.tableData[index].form)
+      //   );
+
+      //   // }
+      // }
       //2019年11月26日 dyp 去除根据相等的产品编码判断，只要存在'C01,C02,M01’这种编码统统带出来
       this.$nextTick(() => {
         this.$refs.proNext[0].focus();
