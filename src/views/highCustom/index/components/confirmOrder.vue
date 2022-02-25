@@ -762,14 +762,17 @@
         this.proParam.pageNum = e;
         this.getProjectList();
       },
+	  
       changeOrderType(e) {
         //项目的时候
-
-        if (this.orderTypeList[e].arg5) {
-          this.maxDate = this.orderTypeList[e].arg5
-          this.order.delieryTime = Date.now() + 3600 * 1000 * 24 * this.orderTypeList[e].arg5
+		let a=this.orderTypeList.findIndex((item)=>{
+			return item.cd==e
+		})
+        if (this.orderTypeList[a].arg5) {
+          this.maxDate = this.orderTypeList[a].arg5
+          this.order.delieryTime = Date.now() + 3600 * 1000 * 24 * this.orderTypeList[a].arg5
         }
-        console.log(e);
+        
         if (e == 4 || e == 5) {
           this.showProject = true;
           this.getProjectList();
