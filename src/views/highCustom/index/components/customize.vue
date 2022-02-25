@@ -1021,6 +1021,7 @@ export default {
     handleClick(row, index) {
       // this.tableObj.no = this.length + 1;
       this.tableData.push(JSON.parse(JSON.stringify(this.tableObj)));
+      // this.tableData.push(JSON.parse(JSON.stringify(row)));
       if (this.tableData.length > 1) {
         //this.tableData[this.tableData.length-1].installSite = this.tableData[index].installSite
         this.tableData[this.tableData.length - 1].remark =
