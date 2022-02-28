@@ -156,8 +156,7 @@
         <span class="span7"></span>
 
         <span class="span7">{{ totalNum }}</span>
-        <span v-if="!notShowTotal&&info.points" class="span8">￥{{ ( info.totalAmount + info.points).toFixed(2) }}</span>
-        <span v-else-if="!notShowTotal&&!info.points" class="span8">￥{{  info.totalAmount.toFixed(2) }}</span>
+        <span v-if="!notShowTotal&&info.payAmount" class="span8">￥{{ info.payAmount.toFixed(2) }}</span>
         <span class="span8" v-else></span>
         <span class="span9"></span>
         <span class="span9"></span>
@@ -168,18 +167,25 @@
       <div class="money_detail" v-show="info.orderType == 2 && !notShowTotal">
         <div class="money_item">
           <div class="left">商品合计：</div>
-          <div class="right" v-if="info.points">￥{{ ( info.totalAmount + info.points).toFixed(2) }}</div>
-          <div class="right" v-else>￥{{  info.totalAmount.toFixed(2) }}</div>
+          <div class="right" v-if="info.payAmount">￥{{  info.payAmount.toFixed(2) }}</div>
+          <div class="right" v-else></div>
         </div>
         <div class="money_item">
           <div class="left">积分抵扣：</div>
-          <div class="right" v-if="info.points">-￥{{ info.points.toFixed(2) }}</div>
-          <div class="right" v-else>-￥</div>
+          <div class="right" v-if="info.points">-{{ info.points.toFixed(2) }}</div>
+          <div class="right" v-else></div>
+        </div>
+         <div class="money_item">
+          <div class="left">折扣金额：</div>
+          <div class="right" v-if="info.discountAmount">-{{ info.discountAmount.toFixed(2) }}</div>
+          <div class="right" v-else></div>
         </div>
         <div class="money_item">
           <div class="left">应付金额：</div>
-          <div class="right" style="color: #ff2a00">
+          <div class="right" style="color: #ff2a00" v-if="info.totalAmount">
             ￥{{  info.totalAmount.toFixed(2) }}
+          </div>
+          <div class="right" style="color: #ff2a00" v-else>
           </div>
         </div>
       </div>

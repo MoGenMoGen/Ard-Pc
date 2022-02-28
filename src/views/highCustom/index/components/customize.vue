@@ -304,7 +304,6 @@
                   v-model="form[`${item.code}`]"
                   ref="proNext"
                   @focus="getBlur('input')"
-                  
                   v-else
                   nm="noConfirm"
                   placeholder="请选择"
@@ -888,12 +887,37 @@ export default {
         );
         this.propArr.push(tempFindItem);
       });
+      //如果是修改
+      if (
+        this.tableData[this.selectRow] &&
+        this.tableData[this.selectRow].pro
+      ) {
+        console.log(1111111111);
+        this.form =
+          // JSON.parse( JSON.stringify(
+          this.tableData[this.selectRow].form;
+        // )
+        // );
+      } else {
+        // console.log(22222222222);
+        // console.log(this.selectRow);
+        // console.log("111", this.selectRow, "333");
+        // console.log(this.tableData);
+        if (this.length > 1) {
+          this.form = JSON.parse(
+            JSON.stringify(this.tableData[this.length - 2].form)
+            // JSON.stringify(this.tableData[this.selectRow].form)
+          );
+        } else {
+          this.form = this.tableData[this.selectRow].form;
+        }
+      }
 
-      this.form =this.tableData[this.selectRow].form;
+      // this.form =this.tableData[this.selectRow].form;
       //  JSON.parse(
       //   JSON.stringify(this.tableData[this.selectRow].form)
       // );
-      console.log(111,this.form);
+      console.log(111, this.form);
       //名称中带有材质的默认选中第一项
       this.stepArr.forEach((itemProp) => {
         itemProp.children.forEach((item) => {
@@ -904,16 +928,20 @@ export default {
                 itemProp.name.indexOf("材质") > -1 ||
                 item.name.indexOf("材质") > -1
               ) {
-                if (indexChild==0&&!this.form[`${item.code}`]) {
+                if (indexChild == 0 && !this.form[`${item.code}`]) {
                   console.log(itemChild.code);
-                 this.$set(this.form,`${item.code}`,itemChild.code + '_' + itemChild.name + '_' + itemChild.id)
+                  this.$set(
+                    this.form,
+                    `${item.code}`,
+                    itemChild.code + "_" + itemChild.name + "_" + itemChild.id
+                  );
                 }
               }
             });
           }
         });
       });
-     //如果是修改
+      //如果是修改
       // if (this.tableData[index] && this.tableData[index].pro) {
       //   console.log(1111111111);
       //   this.form = JSON.parse(
