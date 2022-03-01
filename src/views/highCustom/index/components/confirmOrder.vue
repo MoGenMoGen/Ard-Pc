@@ -408,6 +408,7 @@
         this.agentScore = info1.availablePoints; //经销商可用积分
         this.netList = info2.data.records; //网点列表信息
         // console.log("ffff", this.netList);
+        this.order.buyType=1;
       }
       if (this.checkAddrId) {
         await this.getProxyAddressList();

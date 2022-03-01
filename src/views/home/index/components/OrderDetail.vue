@@ -170,11 +170,11 @@
           <div class="right" v-if="info.payAmount">￥{{  info.payAmount.toFixed(2) }}</div>
           <div class="right" v-else></div>
         </div>
-        <div class="money_item">
+        <!-- <div class="money_item">
           <div class="left">积分抵扣：</div>
           <div class="right" v-if="info.points">-{{ info.points.toFixed(2) }}</div>
           <div class="right" v-else></div>
-        </div>
+        </div> -->
          <div class="money_item">
           <div class="left">折扣金额：</div>
           <div class="right" v-if="info.discountAmount">-{{ info.discountAmount.toFixed(2) }}</div>
